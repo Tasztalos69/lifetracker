@@ -8,12 +8,14 @@ import { Commit } from "vuex";
 type User = CognitoUser | null;
 
 interface AccountState {
+  loading: boolean;
   authorized: boolean;
   user: User;
   loginError: string;
 }
 
 const state = (): AccountState => ({
+  loading: true,
   authorized: false,
   user: null,
   loginError: ""
@@ -49,10 +51,12 @@ const mutations = {
   set(state: AccountState, user: CognitoUser): void {
     state.user = user;
     state.authorized = !!user;
+    state.loading = false;
   }
 };
 
 export default {
+  namespaced: true,
   state,
   getters,
   actions,

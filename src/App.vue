@@ -5,24 +5,18 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapGetters } from "vuex";
 
 export default defineComponent({
   created: function() {
     console.log("App component created");
-    this.$store.dispatch("load").then(() => {
-      console.log(this.isLoggedIn);
-      if (!this.isLoggedIn) this.$router.push("/login");
-    });
-  },
-  computed: mapGetters(["isLoggedIn", "user"])
+    this.$store.dispatch("auth/load");
+  }
 });
 </script>
 
 <style lang="scss">
+@use "scss/variables" as *;
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=Roboto:wght@300;500&display=swap");
-
-$bg: #fff;
 
 * {
   margin: 0;
@@ -47,6 +41,7 @@ $bg: #fff;
 }
 
 button {
+  position: relative;
   background: var(--accent);
   color: $bg;
   border: none;
@@ -57,9 +52,12 @@ button {
   &.rounded {
     background: $bg;
     color: var(--accent);
-    border-radius: 40px;
-    border: 3px solid var(--accent);
-    box-shadow: 0 0 22px 4px rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    border: 5px solid var(--accent);
+    box-shadow: 0 0 ($roundedButtonSize / 4) 4px rgba(0, 0, 0, 0.4);
+    height: $roundedButtonSize;
+    width: $roundedButtonSize;
+    padding: 0;
   }
 }
 

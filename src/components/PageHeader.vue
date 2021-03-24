@@ -1,0 +1,76 @@
+<template>
+  <div id="page-header">
+    <div class="today-display" v-if="!isSubpage"></div>
+    <button class="rounded button-back" v-if="isSubpage" @click="goBack">
+      <fa :icon="['fas', 'chevron-left']"></fa>
+    </button>
+    <h2><fa v-if="titleIcon" :icon="titleIcon.split('/')"></fa>{{ title }}</h2>
+    <div class="placeholder" v-if="isSubpage"></div>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from "vue";
+import isEmpty from "lodash/isEmpty";
+
+export default defineComponent({
+  name: "PageHeader",
+  props: {
+    title: {
+      type: String,
+      required: true,
+      validator: v => !isEmpty(v)
+    },
+    titleIcon: {
+      type: String,
+      default: undefined,
+      validator: v => v.split("/").length === 2
+    },
+    isSubpage: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    goBack() {
+      this.$router.back();
+    }
+  }
+});
+</script>
+
+<style scoped lang="scss">
+@use "../scss/variables" as *;
+
+#page-header {
+  display: flex;
+  flex-direction: row;
+  $headerPadding: 20px;
+  width: calc(100% - #{$headerPadding} * 2);
+  justify-content: space-between;
+  align-items: center;
+  padding: $headerPadding;
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    svg {
+      margin-right: 10px;
+    }
+  }
+
+  button svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  .button-back svg {
+    margin-left: -5px;
+  }
+
+  .placeholder {
+    width: $roundedButtonSize;
+  }
+}
+</style>

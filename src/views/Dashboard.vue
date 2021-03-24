@@ -1,12 +1,15 @@
 <template>
-  <h1>Dashboard</h1>
+  <PageHeader is-subpage title="see" title-icon="far/eye"></PageHeader>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import PageHeader from "@/components/PageHeader";
 
 export default defineComponent({
-  name: "Dashboard"
+  name: "Dashboard",
+
+  components: { PageHeader }
 });
 </script>
 

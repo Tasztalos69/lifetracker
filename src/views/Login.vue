@@ -1,16 +1,22 @@
 <template>
-  <h1>lifetracker by bmk</h1>
-  <button @click="loginWithGoogle">login</button>
+  <div id="login">
+    <h1>lifetracker by bmk</h1>
+    <button @click="loginWithGoogle">login</button>
+  </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import { Auth } from "aws-amplify";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
   name: "Login",
-  methods: mapActions(["loginWithGoogle"])
+  computed: mapGetters("auth", ["isLoggedIn"]),
+  methods: mapActions("auth", ["loginWithGoogle"]),
+  mounted() {
+    console.log("loggedIn", this.isLoggedIn);
+    if (this.isLoggedIn) this.$router.push("/");
+  }
 });
 </script>
 
