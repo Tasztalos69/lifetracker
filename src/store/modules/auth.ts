@@ -8,28 +8,36 @@ import { Commit } from "vuex";
 type User = CognitoUser | null;
 
 interface AccountState {
-  loading: boolean;
   authorized: boolean;
   user: User;
-  loginError: string;
+  isContentManager: boolean;
 }
 
 const state = (): AccountState => ({
-  loading: true,
   authorized: false,
   user: null,
-  loginError: ""
+  isContentManager: false
 });
 
 const getters = {
+  user: (state: AccountState): User => state.user,
   isLoggedIn: (state: AccountState): boolean => state.authorized,
-  user: (state: AccountState): User => state.user
+  isContentManager: (state: AccountState): boolean => state.isContentManager
 };
 
 const actions = {
   async load({ commit }: { commit: Commit }): Promise<boolean> {
     try {
       const user = await Auth.currentAuthenticatedUser();
+      const groups: string[] = user.getSignInUserSession().getAccessToken()
+        .payload["cognito:groups"];
+
+      if (!groups.includes("observers")) {
+        await Auth.signOut();
+        commit("set", null);
+        return false;
+      }
+
       commit("set", user);
       return user;
     } catch (e) {
@@ -44,14 +52,19 @@ const actions = {
     });
     commit("set", user);
     // return user;
+  },
+
+  async logOut({ commit }: { commit: Commit }): Promise<void> {
+    await Auth.signOut();
+    commit("set", null);
   }
 };
 
 const mutations = {
-  set(state: AccountState, user: CognitoUser): void {
+  set(state: AccountState, user: CognitoUser, isContentManager = false): void {
     state.user = user;
     state.authorized = !!user;
-    state.loading = false;
+    state.isContentManager = isContentManager;
   }
 };
 

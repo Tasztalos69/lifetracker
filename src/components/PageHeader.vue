@@ -6,12 +6,24 @@
     </button>
     <h2><fa v-if="titleIcon" :icon="titleIcon.split('/')"></fa>{{ title }}</h2>
     <div class="placeholder" v-if="isSubpage"></div>
+    <div class="nav-buttons">
+      <button class="rounded" @click="goTo('/people')">
+        <fa :icon="['fas', 'users']"></fa>
+      </button>
+      <button class="rounded" @click="goTo('/settings')">
+        <fa :icon="['fas', 'cog']"></fa>
+      </button>
+      <button class="rounded" @click="logOut">
+        <fa :icon="['fas', 'sign-out-alt']"></fa>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import isEmpty from "lodash/isEmpty";
+import { mapActions } from "vuex";
 
 export default defineComponent({
   name: "PageHeader",
@@ -32,8 +44,12 @@ export default defineComponent({
     }
   },
   methods: {
+    ...mapActions("auth", ["logOut"]),
     goBack() {
       this.$router.back();
+    },
+    goTo(path) {
+      this.$router.push(path);
     }
   }
 });
@@ -67,6 +83,12 @@ export default defineComponent({
 
   .button-back svg {
     margin-left: -5px;
+  }
+
+  .nav-buttons {
+    button:not(:last-child) {
+      margin-right: 20px;
+    }
   }
 
   .placeholder {

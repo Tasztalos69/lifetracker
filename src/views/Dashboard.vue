@@ -1,5 +1,5 @@
 <template>
-  <PageHeader is-subpage title="see" title-icon="far/eye"></PageHeader>
+  <PageHeader title="dashboard"></PageHeader>
 </template>
 
 <script>

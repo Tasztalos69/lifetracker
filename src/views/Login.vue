@@ -13,8 +13,11 @@ export default defineComponent({
   name: "Login",
   computed: mapGetters("auth", ["isLoggedIn"]),
   methods: mapActions("auth", ["loginWithGoogle"]),
+
   mounted() {
-    console.log("loggedIn", this.isLoggedIn);
+    if (this.isLoggedIn) this.$router.push("/");
+  },
+  updated() {
     if (this.isLoggedIn) this.$router.push("/");
   }
 });
