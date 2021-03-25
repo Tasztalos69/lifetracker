@@ -33,9 +33,12 @@ const actions = {
         .payload["cognito:groups"];
 
       if (!groups.includes("observers")) {
-        await Auth.signOut();
-        commit("set", null);
+        await this.logOut({ commit }); // To be tested
         return false;
+      }
+
+      if (groups.includes("contentManagers")) {
+        commit("setContentManager", true);
       }
 
       commit("set", user);
@@ -61,9 +64,11 @@ const actions = {
 };
 
 const mutations = {
-  set(state: AccountState, user: CognitoUser, isContentManager = false): void {
+  set(state: AccountState, user: CognitoUser): void {
     state.user = user;
     state.authorized = !!user;
+  },
+  setContentManager(state: AccountState, isContentManager: boolean): void {
     state.isContentManager = isContentManager;
   }
 };

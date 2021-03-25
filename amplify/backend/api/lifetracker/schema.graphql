@@ -1,0 +1,56 @@
+type SupplementType {
+  name: String!
+}
+
+type Meal @model @key(name: "byDay", fields: ["dayID"]) @auth(rules: [{allow: groups, groups: ["observers"], operations: [read]}, {allow: groups, groups: ["contentManagers"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  time: AWSTime
+  Foods: [Food!] @connection(keyName: "byMeal", fields: ["id"])
+  dayID: ID
+}
+
+type Food @model @key(name: "byFoodType", fields: ["foodTypeID"]) @key(name: "byMeal", fields: ["mealID"]) @auth(rules: [{allow: groups, groups: ["observers"], operations: [read]}, {allow: groups, groups: ["contentManagers"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  foodTypeID: ID
+  amount: Int
+  mealID: ID
+}
+
+type Day @model @key(name: "byPerson", fields: ["personID"]) @auth(rules: [{allow: groups, groups: ["observers"], operations: [read]}, {allow: groups, groups: ["contentManagers"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  personID: ID
+  date: AWSDate!
+  sleep: Sleep
+  mealCount: Int
+  foodTotal: Int
+  Meals: [Meal] @connection(keyName: "byDay", fields: ["id"])
+  supplements: [SupplementType]
+}
+
+type Person @model @auth(rules: [{allow: groups, groups: ["observers"], operations: [read]}, {allow: groups, groups: ["contentManagers"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  name: String!
+  Days: [Day] @connection(keyName: "byPerson", fields: ["id"])
+}
+
+type FoodType @model @key(name: "byFoodCategory", fields: ["foodCategoryID"]) @auth(rules: [{allow: groups, groups: ["contentManagers"], operations: [read, create, update, delete]}, {allow: groups, groups: ["observers"], operations: [read]}]) {
+  id: ID!
+  name: String!
+  foodCategoryID: ID
+  Foods: [Food] @connection(keyName: "byFoodType", fields: ["id"])
+}
+
+type FoodCategory @model @auth(rules: [{allow: groups, groups: ["contentManagers"], operations: [read, create, update, delete]}, {allow: groups, groups: ["observers"], operations: [read]}]) {
+  id: ID!
+  name: String!
+  icon: String
+  FoodTypes: [FoodType] @connection(keyName: "byFoodCategory", fields: ["id"])
+}
+
+type Sleep {
+  id: ID!
+  start: AWSTime!
+  end: AWSTime!
+  length: String
+}
+ 
