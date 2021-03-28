@@ -1,24 +1,23 @@
 <template>
   <div id="login">
     <h1>lifetracker by bmk</h1>
-    <button @click="loginWithGoogle">login</button>
+    <button @click="login">login</button>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
+import firebase from "firebase/app";
 
 export default defineComponent({
   name: "Login",
-  computed: mapGetters("auth", ["isLoggedIn"]),
-  methods: mapActions("auth", ["loginWithGoogle"]),
-
-  mounted() {
-    if (this.isLoggedIn) this.$router.push("/");
-  },
-  updated() {
-    if (this.isLoggedIn) this.$router.push("/");
+  computed: mapGetters(["auth/isLoggedIn"]),
+  methods: {
+    login() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithRedirect(provider);
+    }
   }
 });
 </script>

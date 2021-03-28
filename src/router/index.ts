@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "../store";
+import { Routes } from "../types/router";
 
+const { Dashboard, Login } = Routes;
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
+    name: Dashboard,
     component: () => import("@/views/Dashboard.vue")
   },
   {
     path: "/login",
-    name: "Login",
+    name: Login,
     component: () => import("@/views/Login.vue")
   }
 ];
@@ -21,12 +23,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = store.getters["auth/isLoggedIn"];
-  if (to.fullPath === "/login") {
-    if (isLoggedIn) return next({ path: "/" });
+  console.log("to", to.fullPath, "loggedIn", isLoggedIn);
+  if (to.name === Login) {
+    if (isLoggedIn) return next({ name: Dashboard });
     return next();
   }
   if (isLoggedIn) return next();
-  return next({ path: "/login" });
+  return next({ name: Login });
 });
 
 export default router;
