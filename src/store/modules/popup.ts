@@ -1,5 +1,6 @@
-import { Popup, PopupState as S, PopupType } from "../../types/state";
-import { Commit } from "vuex";
+import { Popup, PopupState as S } from "../../types/state";
+import { ActionContext } from "vuex";
+import { RootState } from "../index";
 
 const state = (): S => ({
   popups: []
@@ -12,13 +13,13 @@ const getters = {
 
 const actions = {
   async addPopup(
-    { commit }: { commit: Commit },
+    { commit }: ActionContext<S, RootState>,
     newPopup: Popup
   ): Promise<void> {
     await commit("addNew", newPopup);
   },
 
-  clearFirstPopup({ commit }: { commit: Commit }): void {
+  clearFirstPopup({ commit }: ActionContext<S, RootState>): void {
     commit("clearFirst");
   }
 };

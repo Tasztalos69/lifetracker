@@ -2,13 +2,29 @@ import { createStore } from "vuex";
 
 import auth from "./modules/auth";
 import popup from "./modules/popup";
+import user from "./modules/user";
+import { nFirestore } from "../types/firestore";
+
+export interface RootState {
+  db: nFirestore;
+}
 
 export default createStore({
-  state: {},
-  mutations: {},
+  getters: {
+    db: (state: RootState): nFirestore => state.db
+  },
+  state: {
+    db: null
+  },
+  mutations: {
+    setDB(state: RootState, value: nFirestore) {
+      state.db = value;
+    }
+  },
   actions: {},
   modules: {
     auth,
-    popup
+    popup,
+    user
   }
 });

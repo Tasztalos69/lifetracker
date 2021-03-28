@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "../store";
 import { Routes } from "../types/router";
 
-const { Dashboard, Login } = Routes;
+const { Dashboard, Login, People } = Routes;
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -13,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: Login,
     component: () => import("@/views/Login.vue")
+  },
+  {
+    path: "/people",
+    name: People,
+    component: () => import("@/views/People.vue")
   }
 ];
 

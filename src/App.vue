@@ -5,18 +5,21 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import firebase from "firebase/app";
+import "firebase/firestore";
 import PopupWrapper from "./components/PopupWrapper.vue";
 
 export default defineComponent({
   components: { PopupWrapper },
+  computed: mapGetters(["db"]),
   created: function() {
+    this.$store.commit("setDB", firebase.firestore());
     firebase.auth().onAuthStateChanged(user => {
       this.setUser({ user });
     });
   },
-  methods: mapActions("auth", ["setUser"])
+  methods: { ...mapActions("auth", ["setUser"]) }
 });
 </script>
 
