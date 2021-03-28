@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { Person } from "./firestore";
 
 export interface AuthState {
   authorized: boolean;
@@ -19,4 +20,8 @@ export interface Popup {
 
 export interface PopupState {
   popups: Popup[];
+}
+
+export interface PeopleState {
+  availablePeople: Person[];
 }

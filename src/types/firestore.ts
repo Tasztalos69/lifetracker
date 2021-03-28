@@ -16,6 +16,7 @@ export interface UserSettings {
 }
 
 export interface Person {
+  id: string;
   name: string;
   daysLogged: number;
 }

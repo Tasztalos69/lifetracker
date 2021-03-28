@@ -4,6 +4,7 @@ import auth from "./modules/auth";
 import popup from "./modules/popup";
 import user from "./modules/user";
 import { nFirestore } from "../types/firestore";
+import people from "./modules/people";
 
 export interface RootState {
   db: nFirestore;
@@ -25,6 +26,7 @@ export default createStore({
   modules: {
     auth,
     popup,
-    user
+    user,
+    people
   }
 });
