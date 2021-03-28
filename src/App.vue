@@ -4,14 +4,18 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import firebase from "firebase/app";
+import { Routes } from "./types/router";
 
 export default defineComponent({
   created: function() {
-    console.log("App component created");
-    this.$store.dispatch("auth/load");
+    firebase.auth().onAuthStateChanged(user => {
+      this.setUser({ user });
+    });
   },
-  computed: mapGetters("auth", ["isLoggedIn", "user", "isContentManager"])
+  computed: mapGetters("auth", ["isLoggedIn", "user", "isContentManager"]),
+  methods: mapActions("auth", ["setUser"])
 });
 </script>
 
