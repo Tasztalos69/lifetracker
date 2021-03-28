@@ -1,12 +1,17 @@
 <template>
   <div id="page-header">
     <div class="today-display" v-if="!isSubpage"></div>
-    <button class="rounded button-back" v-if="isSubpage" @click="goBack">
+    <div class="placeholder" v-if="disableBackButton"></div>
+    <button
+      class="rounded button-back"
+      v-if="isSubpage && !disableBackButton"
+      @click="goBack"
+    >
       <fa :icon="['fas', 'chevron-left']"></fa>
     </button>
     <h2><fa v-if="titleIcon" :icon="titleIcon.split('/')"></fa>{{ title }}</h2>
     <div class="placeholder" v-if="isSubpage"></div>
-    <div class="nav-buttons">
+    <div class="nav-buttons" v-if="!isSubpage">
       <button class="rounded" @click="goTo('/people')">
         <fa :icon="['fas', 'users']"></fa>
       </button>
@@ -39,6 +44,10 @@ export default defineComponent({
       validator: v => v.split("/").length === 2
     },
     isSubpage: {
+      type: Boolean,
+      default: false
+    },
+    disableBackButton: {
       type: Boolean,
       default: false
     }
