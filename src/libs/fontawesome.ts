@@ -4,8 +4,12 @@ import { faEye, faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronLeft,
   faCog,
+  faExclamationCircle,
+  faExclamationTriangle,
+  faInfoCircle,
   faList,
   faSignOutAlt,
+  faTimes,
   faUsers
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,7 +20,11 @@ library.add(
   faCog,
   faSignOutAlt,
   faList,
-  faPlusSquare
+  faPlusSquare,
+  faTimes,
+  faInfoCircle,
+  faExclamationTriangle,
+  faExclamationCircle
 );
 
 export default FontAwesomeIcon;

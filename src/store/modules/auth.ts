@@ -3,34 +3,24 @@ import firebase from "firebase/app";
 import User = firebase.User;
 import router from "../../router";
 import { Routes } from "../../types/router";
+import { AuthState as S, PopupType } from "../../types/state";
 
-interface AccountState {
-  authorized: boolean;
-  user: User | null;
-  isContentManager: boolean;
-}
-
-const state = (): AccountState => ({
+const state = (): S => ({
   authorized: false,
   user: null,
   isContentManager: false
 });
 
 const getters = {
-  isLoggedIn: (state: AccountState): boolean => state.authorized,
-  isContentManager: (state: AccountState): boolean => state.isContentManager
+  user: (state: S): User | null => state.user,
+  isLoggedIn: (state: S): boolean => state.authorized,
+  isContentManager: (state: S): boolean => state.isContentManager
 };
-
-interface SetUserProps {
-  user: User | null;
-  isObserver: boolean;
-  isContentManager: boolean;
-}
 
 const actions = {
   async setUser(
     { commit }: { commit: Commit },
-    { user }: SetUserProps
+    { user }: { user: User | null }
   ): Promise<void> {
     if (!user) return commit("set", null);
     const idTokenResult = await user.getIdTokenResult();
@@ -38,6 +28,14 @@ const actions = {
     console.log(claims);
     if (!claims.observer) {
       await firebase.auth().signOut();
+      await commit(
+        "addNew",
+        {
+          text: "Sorry, you are not allowed to enter.",
+          type: PopupType.ERROR
+        },
+        { root: true }
+      );
       return commit("set", null);
     }
     commit("set", user);
@@ -58,11 +56,11 @@ const actions = {
 };
 
 const mutations = {
-  set(state: AccountState, user: User): void {
+  set(state: S, user: User): void {
     state.user = user;
     state.authorized = !!user;
   },
-  setContentManager(state: AccountState, isContentManager: boolean): void {
+  setContentManager(state: S, isContentManager: boolean): void {
     state.isContentManager = isContentManager;
   }
 };

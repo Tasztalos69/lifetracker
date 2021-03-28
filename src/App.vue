@@ -1,20 +1,21 @@
 <template>
   <router-view />
+  <PopupWrapper />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import firebase from "firebase/app";
-import { Routes } from "./types/router";
+import PopupWrapper from "./components/PopupWrapper.vue";
 
 export default defineComponent({
+  components: { PopupWrapper },
   created: function() {
     firebase.auth().onAuthStateChanged(user => {
       this.setUser({ user });
     });
   },
-  computed: mapGetters("auth", ["isLoggedIn", "user", "isContentManager"]),
   methods: mapActions("auth", ["setUser"])
 });
 </script>
