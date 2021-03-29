@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import firebase from "firebase/app";

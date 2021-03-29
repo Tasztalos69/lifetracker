@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import PageHeader from "@/components/PageHeader";
 import DashboardCard from "@/components/DashboardCard";
