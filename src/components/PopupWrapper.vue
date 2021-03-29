@@ -2,12 +2,12 @@
   <transition name="fade5ms">
     <div id="popup" v-if="!!currentPopup">
       <div class="left">
-        <fa class="icon" :icon="['fas', currentPopup.type]"></fa>
+        <fa class="icon" :icon="['fas', currentPopup.type]" />
         <p>
           {{ currentPopup.text }}
         </p>
       </div>
-      <fa class="close" :icon="['fas', 'times']" @click="clearFirstPopup"></fa>
+      <fa class="close" :icon="['fas', 'times']" @click="clearFirstPopup" />
     </div>
   </transition>
 </template>

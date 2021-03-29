@@ -1,25 +1,25 @@
 <template>
   <div id="page-header">
-    <div class="today-display" v-if="!isSubpage"></div>
-    <div class="placeholder" v-if="disableBackButton"></div>
+    <div class="today-display" v-if="!isSubpage" />
+    <div class="placeholder" v-if="disableBackButton" />
     <button
       class="rounded button-back"
       v-if="isSubpage && !disableBackButton"
       @click="goBack"
     >
-      <fa :icon="['fas', 'chevron-left']"></fa>
+      <fa :icon="['fas', 'chevron-left']" />
     </button>
-    <h2><fa v-if="titleIcon" :icon="titleIcon.split('/')"></fa>{{ title }}</h2>
-    <div class="placeholder" v-if="isSubpage"></div>
+    <h2><fa v-if="titleIcon" :icon="titleIcon.split('/')" />{{ title }}</h2>
+    <div class="placeholder" v-if="isSubpage" />
     <div class="nav-buttons" v-if="!isSubpage">
       <button class="rounded" @click="goTo('/people')">
-        <fa :icon="['fas', 'users']"></fa>
+        <fa :icon="['fas', 'users']" />
       </button>
       <button class="rounded" @click="goTo('/settings')">
-        <fa :icon="['fas', 'cog']"></fa>
+        <fa :icon="['fas', 'cog']" />
       </button>
       <button class="rounded" @click="logOut">
-        <fa :icon="['fas', 'sign-out-alt']"></fa>
+        <fa :icon="['fas', 'sign-out-alt']" />
       </button>
     </div>
   </div>
@@ -41,7 +41,7 @@ export default defineComponent({
     titleIcon: {
       type: String,
       default: undefined,
-      validator: v => v.split("/").length === 2
+      validator: (v: string) => v.split("/").length === 2
     },
     isSubpage: {
       type: Boolean,
@@ -57,7 +57,7 @@ export default defineComponent({
     goBack() {
       this.$router.back();
     },
-    goTo(path) {
+    goTo(path: string) {
       this.$router.push(path);
     }
   }

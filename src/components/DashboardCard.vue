@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-card" :class="{ active }" @click="goTo('/' + target)">
     <div class="content">
-      <fa v-if="icon" :icon="icon.split('/')"></fa>
+      <fa v-if="icon" :icon="icon.split('/')" />
       <p>I want to</p>
       <h3>{{ target }}</h3>
       <p>{{ bottomText }}</p>
@@ -23,7 +23,7 @@ export default defineComponent({
     icon: {
       type: String,
       required: true,
-      validator: v => v.split("/").length === 2
+      validator: (v: string) => v.split("/").length === 2
     },
     target: {
       type: String,
@@ -36,12 +36,12 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters("auth", ["isContentManager"]),
-    active: function() {
+    active: function(): boolean {
       return !this.elevated || this.isContentManager;
     }
   },
   methods: {
-    goTo(path) {
+    goTo(path: string) {
       this.active && this.$router.push(path);
     }
   }

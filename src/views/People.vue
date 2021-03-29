@@ -1,14 +1,10 @@
 <template>
-  <PageHeader
-    title="Select a person:"
-    is-subpage
-    v-bind="headerProps"
-  ></PageHeader>
+  <PageHeader title="Select a person:" is-subpage v-bind="headerProps" />
 
   <h2 v-if="!!selectedPersonData">currently selected:</h2>
   <transition name="fade3ms">
     <div class="selected-person" v-if="!!selectedPersonData">
-      <PeopleCard :person="selectedPersonData" is-selected></PeopleCard>
+      <PeopleCard :person="selectedPersonData" is-selected />
     </div>
   </transition>
   <h2>Available people:</h2>
@@ -18,16 +14,16 @@
         v-for="person in availablePeople"
         :key="person.id"
         :person="person"
-      ></PeopleCard>
+      />
     </div>
   </transition>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import PageHeader from "@/components/PageHeader";
+import PageHeader from "@/components/PageHeader.vue";
 import { mapActions, mapGetters } from "vuex";
-import PeopleCard from "@/components/PeopleCard";
+import PeopleCard from "@/components/PeopleCard.vue";
 
 export default defineComponent({
   name: "People",
