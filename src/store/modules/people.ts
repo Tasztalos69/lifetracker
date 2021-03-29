@@ -2,12 +2,14 @@ import { ActionContext } from "vuex";
 import { RootState } from "../index";
 import validateDB from "../../utils/validateDB";
 import { PeopleState as S } from "../../types/state";
-import { Person } from "../../types/firestore";
+import { Nullable, Person } from "../../types/firestore";
 
 const state = (): S => ({
-  availablePeople: []
+  availablePeople: [],
+  selectedPersonData: null
 });
 const getters = {
+  selectedPersonData: (state: S): Nullable<Person> => state.selectedPersonData,
   availablePeople: (state: S): Person[] => state.availablePeople
 };
 const actions = {
@@ -21,14 +23,18 @@ const actions = {
     const selectedPersonID = await rootGetters["selectedPersonID"];
     console.log(selectedPersonID);
     const people = await db.collection("people").get();
-    people.forEach(
-      doc =>
-        doc.id !== selectedPersonID &&
-        commit("addToList", { ...doc.data(), id: doc.id })
+    people.forEach(doc =>
+      doc.id === selectedPersonID
+        ? commit("setSelectedData", { ...doc.data(), id: doc.id })
+        : commit("addToList", { ...doc.data(), id: doc.id })
     );
   }
 };
 const mutations = {
+  setSelectedData(state: S, toAdd: Person): void {
+    state.selectedPersonData = toAdd;
+    console.log("setting selected person", toAdd);
+  },
   addToList(state: S, toAdd: Person): void {
     state.availablePeople.push(toAdd);
   },

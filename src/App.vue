@@ -74,4 +74,21 @@ button {
 span.number {
   font-family: "Roboto", sans-serif;
 }
+
+.fade5ms-enter-active,
+.fade5ms-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.fade3ms-enter-active,
+.fade3ms-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.fade5ms-enter-from,
+.fade5ms-leave-to,
+.fade3ms-enter-from,
+.fade3ms-leave-to {
+  opacity: 0;
+}
 </style>

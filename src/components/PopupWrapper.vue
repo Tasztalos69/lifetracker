@@ -1,5 +1,5 @@
 <template>
-  <transition name="fade">
+  <transition name="fade5ms">
     <div id="popup" v-if="!!currentPopup">
       <div class="left">
         <fa class="icon" :icon="['fas', currentPopup.type]"></fa>
@@ -72,14 +72,5 @@ export default defineComponent({
     width: 1.6rem;
     cursor: pointer;
   }
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.5s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

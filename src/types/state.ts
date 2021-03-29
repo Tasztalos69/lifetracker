@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { Person } from "./firestore";
+import { Nullable, Person } from "./firestore";
 
 export interface AuthState {
   authorized: boolean;
@@ -24,4 +24,5 @@ export interface PopupState {
 
 export interface PeopleState {
   availablePeople: Person[];
+  selectedPersonData: Nullable<Person>;
 }
