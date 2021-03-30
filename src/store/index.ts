@@ -1,10 +1,11 @@
 import { createStore } from "vuex";
+import { nFirestore } from "@/types/firestore";
 
 import auth from "./modules/auth";
 import popup from "./modules/popup";
 import user from "./modules/user";
-import { nFirestore } from "../types/firestore";
 import people from "./modules/people";
+import supplement from "./modules/supplement";
 
 export interface RootState {
   db: nFirestore;
@@ -27,6 +28,7 @@ export default createStore({
     auth,
     popup,
     user,
-    people
+    people,
+    supplement,
   }
 });

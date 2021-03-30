@@ -20,3 +20,10 @@ export interface Person {
   name: string;
   daysLogged: number;
 }
+
+export interface SupplementType {
+  id: string;
+  name: string;
+  unit: string;
+  step: number;
+}
