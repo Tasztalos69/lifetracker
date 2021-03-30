@@ -17,7 +17,7 @@ import { Person } from "@/types/firestore";
 
 export default defineComponent({
   name: "PeopleCard",
-  computed: mapGetters(["selectedPersonID", "availablePeople"]),
+  computed: mapGetters(["availablePeople"]),
   methods: mapActions(["setSelectedPerson"]),
 
   props: {

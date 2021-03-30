@@ -3,6 +3,7 @@ import { RootState } from "../index";
 import validateDB from "../../utils/validateDB";
 import { PeopleState as S } from "../../types/state";
 import { Nullable, Person } from "../../types/firestore";
+import constructFBData from "@/utils/constructFBData";
 
 const state = (): S => ({
   availablePeople: [],
@@ -25,8 +26,8 @@ const actions = {
     const people = await db.collection("people").get();
     people.forEach(doc =>
       doc.id === selectedPersonID
-        ? commit("setSelectedData", { ...doc.data(), id: doc.id })
-        : commit("addToList", { ...doc.data(), id: doc.id })
+        ? commit("setSelectedData", constructFBData(doc))
+        : commit("addToList", constructFBData(doc))
     );
   }
 };

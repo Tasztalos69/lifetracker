@@ -33,7 +33,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = store.getters["auth/isLoggedIn"];
-  console.log("to", to.fullPath, "loggedIn", isLoggedIn);
+  console.log("to", to.fullPath, "from", from.fullPath, "loggedIn", isLoggedIn);
   if (to.name === Login) {
     if (isLoggedIn) return next({ name: Dashboard });
     return next();
