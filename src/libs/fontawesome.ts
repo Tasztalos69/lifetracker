@@ -2,8 +2,10 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import {
+  faChevronDown,
   faChevronLeft,
   faCog,
+  faDrumstickBite,
   faExclamationCircle,
   faExclamationTriangle,
   faInfoCircle,
@@ -12,6 +14,8 @@ import {
   faTimes,
   faUsers
 } from "@fortawesome/free-solid-svg-icons";
+
+// TODO Refactor for dynamic import
 
 library.add(
   faEye,
@@ -24,7 +28,9 @@ library.add(
   faTimes,
   faInfoCircle,
   faExclamationTriangle,
-  faExclamationCircle
+  faExclamationCircle,
+  faChevronDown,
+  faDrumstickBite
 );
 
 export default FontAwesomeIcon;

@@ -3,6 +3,8 @@ import {
   SupplementType,
   Nullable,
   Person,
+  FoodCategory,
+  FoodType
 } from "./firestore";
 
 export interface AuthState {
@@ -33,4 +35,9 @@ export interface PeopleState {
 
 export interface SupplementState {
   supplementTypes: SupplementType[];
+}
+
+export interface FoodState {
+  foodCategories: FoodCategory[];
+  foodTypes: FoodType[];
 }

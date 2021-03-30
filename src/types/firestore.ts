@@ -21,9 +21,46 @@ export interface Person {
   daysLogged: number;
 }
 
+export interface Day {
+  personId: string;
+  date: string;
+  sleep: Sleep;
+  meals: Meal[];
+  supplements: number[];
+  drink: number;
+}
+
+export interface Sleep {
+  start: string;
+  end: string;
+  duration?: string;
+}
+
+export interface Meal {
+  time: string;
+  foods: Food[];
+}
+
+export interface Food {
+  typeId: string;
+  amount: number;
+}
+
 export interface SupplementType {
   id: string;
   name: string;
   unit: string;
   step: number;
+}
+
+export interface FoodType {
+  id: string;
+  name: string;
+  categoryId: string;
+}
+
+export interface FoodCategory {
+  id: string;
+  name: string;
+  icon: string[];
 }

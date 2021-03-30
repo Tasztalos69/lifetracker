@@ -6,6 +6,7 @@ import popup from "./modules/popup";
 import user from "./modules/user";
 import people from "./modules/people";
 import supplement from "./modules/supplement";
+import food from "./modules/food";
 
 export interface RootState {
   db: nFirestore;
@@ -30,5 +31,6 @@ export default createStore({
     user,
     people,
     supplement,
+    food
   }
 });
