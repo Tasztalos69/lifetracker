@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import Firestore = firebase.firestore.Firestore;
+import { DateSleepRow, FoodPart, SupplementDrinkRow } from "@/types/editor";
 
 export type nFirestore = Firestore | null;
 
@@ -21,13 +22,8 @@ export interface Person {
   daysLogged: number;
 }
 
-export interface Day {
+export interface Day extends DateSleepRow, FoodPart, SupplementDrinkRow {
   personId: string;
-  date: string;
-  sleep: Sleep;
-  meals: Meal[];
-  supplements: number[];
-  drink: number;
 }
 
 export interface Sleep {
