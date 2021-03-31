@@ -26,7 +26,7 @@ export default defineComponent({
 <style lang="scss">
 @use "scss/variables" as *;
 
-@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=Roboto:wght@300;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,600&family=Roboto:wght@300;500&display=swap");
 
 * {
   margin: 0;

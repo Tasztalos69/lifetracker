@@ -14,7 +14,7 @@
         <div class="foods">
           <h4>Type</h4>
           <h4>Amount</h4>
-          <div class="editor" v-for="(food, i) in newFood" :key="food.id">
+          <div class="food-editor" v-for="(food, i) in newFood" :key="food.id">
             <button class="dropdown" @click="toggleDropdown(i)">
               {{
                 (foodType(newFood[i].typeId) &&
