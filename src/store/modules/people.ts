@@ -1,8 +1,8 @@
 import { ActionContext } from "vuex";
-import { RootState } from "../index";
-import validateDB from "../../utils/validateDB";
-import { PeopleState as S } from "../../types/state";
-import { Nullable, Person } from "../../types/firestore";
+import { RootState } from "@/store";
+import validateDB from "@/utils/validateDB";
+import { PeopleState as S } from "@/types/state";
+import { Nullable, Person, Targets } from "@/types/firestore";
 import constructFBData from "@/utils/constructFBData";
 
 const state = (): S => ({
@@ -11,6 +11,8 @@ const state = (): S => ({
 });
 const getters = {
   selectedPersonData: (state: S): Nullable<Person> => state.selectedPersonData,
+  selectedPersonTargets: (state: S): Nullable<Targets> =>
+    state.selectedPersonData?.targets || null,
   availablePeople: (state: S): Person[] => state.availablePeople
 };
 const actions = {

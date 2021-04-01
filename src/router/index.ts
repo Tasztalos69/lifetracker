@@ -32,6 +32,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0);
   const isLoggedIn = store.getters["auth/isLoggedIn"];
   console.log("to", to.fullPath, "from", from.fullPath, "loggedIn", isLoggedIn);
   if (to.name === Login) {

@@ -32,6 +32,7 @@ export default defineComponent({
   position: relative;
   margin-top: 100px;
   margin-left: 100px;
+  margin-bottom: 100px;
   display: flex;
   flex-direction: column;
   width: calc(60% - 60px);

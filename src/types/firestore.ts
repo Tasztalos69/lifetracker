@@ -16,10 +16,17 @@ export interface UserSettings {
   colorScheme: ColorSchemes;
 }
 
+export interface Targets {
+  sleep: number;
+  food: number;
+  drink: number;
+}
+
 export interface Person {
   id: string;
   name: string;
   daysLogged: number;
+  targets: Targets;
 }
 
 export interface Day extends DateSleepRow, FoodPart, SupplementDrinkRow {
