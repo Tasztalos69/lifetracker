@@ -6,10 +6,12 @@ import {
   faChevronDown,
   faChevronLeft,
   faCog,
+  faDrumstickBite,
   faExclamationCircle,
   faExclamationTriangle,
   faInfoCircle,
   faList,
+  faLongArrowAltRight,
   faMinus,
   faPlus,
   faSignOutAlt,
@@ -34,7 +36,10 @@ library.add(
   faChevronDown,
   faPlus,
   faCheck,
-  faMinus
+  faMinus,
+  faChevronLeft,
+  faLongArrowAltRight,
+  faDrumstickBite // OVERRIDE
 );
 
 export default FontAwesomeIcon;

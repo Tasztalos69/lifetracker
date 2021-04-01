@@ -78,10 +78,13 @@ export default defineComponent({
       font-style: italic;
     }
 
-    .plus {
+    .hollow {
       color: var(--accent);
       background: $bg;
       border: 3px solid var(--accent);
+    }
+
+    .plus {
       width: 40px;
       height: 40px;
       padding: 0;
