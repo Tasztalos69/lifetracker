@@ -2,10 +2,27 @@
   <div class="row">
     <section id="s-date">
       <h3>Date</h3>
-      <h6>{{ date }}</h6>
-      <button>Today</button>
-      <button>Yesterday</button>
-      <button>edit</button>
+      <h6>{{ dateDisplay }}</h6>
+      <button @click="setToday">
+        Today
+      </button>
+      <button @click="setYesterday">
+        Yesterday
+      </button>
+      <button
+        @click="
+          init({
+            placeholder: '2000.01.01.',
+            delimiter: '.',
+            delimiterCount: 3,
+            ref: ['date'],
+            maxLength: 11,
+            value: dateDisplay
+          })
+        "
+      >
+        edit
+      </button>
     </section>
     <section id="s-sleep">
       <h3>Sleep</h3>
@@ -13,12 +30,38 @@
         <div>
           <h4>start</h4>
           <h6>{{ sleep.start }}</h6>
-          <button>Edit</button>
+          <button
+            @click="
+              init({
+                placeholder: '08:00',
+                delimiter: ':',
+                delimiterCount: 1,
+                ref: ['sleep', 'start'],
+                maxLength: 5,
+                value: sleep.start
+              })
+            "
+          >
+            Edit
+          </button>
         </div>
         <div>
           <h4>end</h4>
           <h6>{{ sleep.end }}</h6>
-          <button>Edit</button>
+          <button
+            @click="
+              init({
+                placeholder: '08:00',
+                delimiter: ':',
+                delimiterCount: 1,
+                ref: ['sleep', 'end'],
+                maxLength: 5,
+                value: sleep.end
+              })
+            "
+          >
+            Edit
+          </button>
         </div>
       </div>
     </section>
@@ -27,18 +70,36 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { DateSleepRow } from "@/types/editor";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import isEmpty from "lodash/isEmpty";
+import { DateTime } from "luxon";
 
 export default defineComponent({
   name: "EditorRowDateSleep",
-  data(): DateSleepRow {
-    return {
-      date: "2003. 04. 30.",
-      sleep: {
-        start: "8:00",
-        end: "10:00"
-      }
-    };
+  computed: {
+    ...mapGetters("editor", ["date", "sleep"]),
+    ...mapGetters("keypad", ["ref"]),
+    dateDisplay(): string {
+      if (!this.date || isEmpty(this.date)) return "";
+      return this.date.replaceAll("-", ".").concat(".");
+    }
+  },
+  methods: {
+    ...mapMutations({ init: "keypad/init", discard: "keypad/discard" }),
+    ...mapActions({ setDate: "editor/setDate" }),
+    isEmpty,
+    setToday() {
+      if (this.ref[0] === "date") this.discard();
+      this.setDate(DateTime.now().toISODate());
+    },
+    setYesterday() {
+      if (this.ref[0] === "date") this.discard();
+      this.setDate(
+        DateTime.now()
+          .minus({ days: 1 })
+          .toISODate()
+      );
+    }
   }
 });
 </script>

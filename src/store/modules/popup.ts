@@ -17,6 +17,9 @@ const actions = {
     newPopup: Popup
   ): Promise<void> {
     await commit("addNew", newPopup);
+    setTimeout(() => {
+      commit("clearFirst");
+    }, 5000);
   },
 
   clearFirstPopup({ commit }: ActionContext<S, RootState>): void {

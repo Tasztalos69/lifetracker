@@ -41,3 +41,13 @@ export interface FoodState {
   foodCategories: FoodCategory[];
   foodTypes: FoodType[];
 }
+
+export interface KeypadState {
+  ref: string[];
+  value: string;
+  maxLength: number;
+  delimiter: Nullable<":" | ".">;
+  delimiterCount: number;
+  placeholder: string;
+  error?: string;
+}

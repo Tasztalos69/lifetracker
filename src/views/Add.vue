@@ -1,26 +1,68 @@
 <template>
   <PageHeader title="add" title-icon="far/plus-square" is-subpage />
   <div id="editor">
-    <EditorRowDateSleep />
-    <EditorRowFood />
-    <EditorRowSupplementDrink />
+    <EditorRowDateSleep :class="{ inactive: isEmpty(date) }" />
+    <EditorRowFood :class="{ inactive: isEmpty(date) }" />
+    <EditorRowSupplementDrink :class="{ inactive: isEmpty(date) }" />
   </div>
+  <transition name="keypad">
+    <EditorKeypad v-if="shouldDisplayKeypad" />
+  </transition>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { mapGetters, mapMutations } from "vuex";
+import isEmpty from "lodash/isEmpty";
 import PageHeader from "@/components/PageHeader.vue";
 import EditorRowDateSleep from "@/components/EditorRowDateSleep.vue";
 import EditorRowFood from "@/components/EditorRowFood.vue";
 import EditorRowSupplementDrink from "@/components/EditorRowSupplementDrink.vue";
+import EditorKeypad from "@/components/EditorKeypad.vue";
 
 export default defineComponent({
   name: "Add",
+  computed: {
+    ...mapGetters(["keypad/ref", "editor/date"]),
+    date(): string {
+      return this["editor/date"];
+    },
+    shouldDisplayKeypad(): boolean {
+      return !isEmpty(this["keypad/ref"]);
+    }
+  },
+  methods: {
+    ...mapMutations("editor", ["setDayId", "replaceStateWithObject"]),
+    isEmpty
+  },
   components: {
+    EditorKeypad,
     EditorRowSupplementDrink,
     EditorRowFood,
     EditorRowDateSleep,
     PageHeader
+  },
+  created() {
+    this.setDayId(undefined);
+    this.replaceStateWithObject({
+      dayId: undefined,
+      date: "",
+      sleep: {
+        start: "",
+        end: ""
+      },
+      newMeal: {
+        time: "",
+        foods: []
+      },
+      showNewMeal: false,
+      newFood: [],
+      meals: [],
+      supplements: [],
+      drink: 0
+    });
+    this.$store.dispatch("fetchSupplementTypes");
+    this.$store.dispatch("getAvailablePeople");
   }
 });
 </script>
@@ -30,9 +72,7 @@ export default defineComponent({
 
 #editor {
   position: relative;
-  margin-top: 100px;
-  margin-left: 100px;
-  margin-bottom: 100px;
+  margin: 100px 0 100px 100px;
   display: flex;
   flex-direction: column;
   width: calc(60% - 60px);
@@ -42,7 +82,7 @@ export default defineComponent({
     border-bottom: 2px dashed $disabled;
   }
 
-  .row::v-deep {
+  ::v-deep(.row) {
     width: 100%;
     display: flex;
     padding: 30px 0;
@@ -77,6 +117,13 @@ export default defineComponent({
       font-weight: 700;
       font-size: 1.2rem;
       font-style: italic;
+      text-indent: -0.8rem;
+
+      &:before {
+        content: " ";
+        display: inline-block;
+        width: 1rem;
+      }
     }
 
     .hollow {
@@ -90,6 +137,40 @@ export default defineComponent({
       height: 40px;
       padding: 0;
     }
+
+    * {
+      transition: 0.2s all ease-in-out;
+    }
+
+    &.inactive {
+      section:not(#s-date) {
+        color: $disabled;
+
+        button {
+          background: $disabled;
+          color: $bg;
+          cursor: default;
+        }
+
+        .hollow {
+          color: $disabled;
+          background: $bg;
+          border: 3px solid $disabled;
+        }
+
+        .water-container {
+          border: 3px solid $disabled;
+          border-top: none;
+        }
+      }
+    }
   }
+}
+
+#keypad-wrapper {
+  position: fixed;
+  top: 150px;
+  right: 50px;
+  width: 30%;
 }
 </style>

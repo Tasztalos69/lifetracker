@@ -2,14 +2,43 @@
   <div class="row">
     <section id="s-food">
       <h3>Food</h3>
-      <div class="existing-meals" v-for="meal in meals" :key="meal.time">
-        <!-- TODO List existing foods -->
+      <div id="existing-meals">
+        <div
+          class="existing-meal"
+          v-for="meal in meals.sort((a, b) => a.time > b.time)"
+          :key="meal.time"
+        >
+          <h2>{{ meal.time }}</h2>
+          <p>{{ meal.foods.length }}db</p>
+          <h3>
+            {{
+              meal.foods.reduce(
+                (acc, cur) =>
+                  (acc += isNaN(cur.amount) ? 0 : parseInt(cur.amount)),
+                0
+              )
+            }}g
+          </h3>
+        </div>
       </div>
       <div class="new-meal" v-if="showNewMeal">
         <div class="time">
           <h4>Time</h4>
           <h6>{{ newMeal.time }}</h6>
-          <button>Edit</button>
+          <button
+            @click="
+              init({
+                placeholder: '08:00',
+                delimiter: ':',
+                delimiterCount: 1,
+                ref: ['newMeal', 'time'],
+                maxLength: 5,
+                value: newMeal.time
+              })
+            "
+          >
+            Edit
+          </button>
         </div>
         <div class="foods-wrapper">
           <div class="foods">
@@ -38,14 +67,17 @@
                     <li
                       v-for="category in foodCategories"
                       :key="category.id"
-                      @click="setSelectedCategory(category.id, i)"
+                      @click="setSelectedCategory({ id: category.id, i })"
                     >
                       <fa :icon="category.icon" class="category-icon" />
                       <p>{{ category.name }}</p>
                     </li>
                   </ul>
                   <ul v-if="selectedCategoryExists(i)">
-                    <li class="button-back" @click="setSelectedCategory('', i)">
+                    <li
+                      class="button-back"
+                      @click="setSelectedCategory({ id: '', i })"
+                    >
                       <fa
                         :icon="['fas', 'chevron-left']"
                         class="category-icon"
@@ -55,7 +87,7 @@
                     <li
                       v-for="type in typesInCategory(i)"
                       :key="type.id"
-                      @click="setSelectedType(type.id, i)"
+                      @click="setSelectedType({ id: type.id, i })"
                     >
                       <fa
                         :icon="['fas', 'long-arrow-alt-right']"
@@ -75,7 +107,20 @@
                 :key="food.id"
               >
                 <h6 class="amount-display">{{ newFood[i].amount }}g</h6>
-                <button>edit</button>
+                <button
+                  @click="
+                    init({
+                      placeholder: '100',
+                      delimiter: null,
+                      delimiterCount: 0,
+                      ref: ['newFood', i, 'amount'],
+                      maxLength: 4,
+                      value: newFood[i].amount
+                    })
+                  "
+                >
+                  edit
+                </button>
                 <button class="delete-food" @click="removeNewFood(i)">
                   <fa :icon="['fas', 'times']" />
                 </button>
@@ -86,7 +131,7 @@
             <fa :icon="['fas', 'plus']" />
           </button>
         </div>
-        <button class="meal-confirm hollow">
+        <button class="meal-confirm hollow" @click="confirmNewMeal">
           <fa :icon="['fas', 'check']" />
         </button>
       </div>
@@ -104,57 +149,36 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import isEmpty from "lodash/isEmpty";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import { FoodType, Nullable } from "@/types/firestore";
-import { FoodRow } from "@/types/editor";
-
-const defaultNewFood = {
-  amount: 0,
-  typeId: "",
-  showDropdown: false,
-  selectedCategory: ""
-};
 
 export default defineComponent({
   name: "EditorRowFood",
   computed: {
-    ...mapGetters(["foodCategories", "foodTypes", "foodType"])
+    ...mapGetters(["foodCategories", "foodTypes", "foodType"]),
+    ...mapGetters("editor", [
+      "meals",
+      "newMeal",
+      "showNewMeal",
+      "newFood",
+      "date"
+    ])
   },
-  data(): FoodRow {
-    return {
-      meals: [],
-      newMeal: {
-        time: "11:28"
-      },
-      showNewMeal: false,
-      newFood: []
-    };
-  },
+
   methods: {
-    toggleDropdown(i: number) {
-      this.newFood[i].showDropdown = !this.newFood[i].showDropdown;
-    },
+    ...mapMutations({ init: "keypad/init", discard: "keypad/discard" }),
+    ...mapMutations("editor", [
+      "toggleDropdown",
+      "toggleShowNewMeal",
+      "addNewFood",
+      "removeNewFood",
+      "setSelectedCategory",
+      "setSelectedType"
+    ]),
+    ...mapActions("editor", ["confirmNewMeal"]),
+    isEmpty,
     selectedCategoryExists(index: number): boolean {
       return !isEmpty(this.newFood[index].selectedCategory);
-    },
-    toggleShowNewMeal() {
-      this.showNewMeal = !this.showNewMeal;
-      this.addNewFood();
-    },
-    addNewFood() {
-      this.newFood.push(defaultNewFood);
-    },
-    removeNewFood(i: number): void {
-      if (this.newFood.length === 1) this.showNewMeal = false;
-      this.newFood.splice(i, 1);
-    },
-    setSelectedCategory(id: string, i: number): void {
-      this.newFood[i].selectedCategory = id;
-    },
-    setSelectedType(id: string, i: number): void {
-      this.newFood[i].typeId = id;
-      this.newFood[i].selectedCategory = "";
-      this.toggleDropdown(i);
     },
     typesInCategory(index: number): Nullable<FoodType[]> {
       if (!this.selectedCategoryExists) return null;
@@ -171,11 +195,29 @@ export default defineComponent({
 @use "../scss/variables" as *;
 
 #s-food {
+  #existing-meals {
+    width: 80%;
+    margin-left: 10%;
+
+    .existing-meal {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      margin: 10px 0;
+
+      &:not(:last-of-type) {
+        border-bottom: 2px dashed rgba($disabled, 0.4);
+      }
+    }
+  }
   .add-new-meal {
     width: 100% !important;
   }
 
   .new-meal {
+    margin-top: 40px;
     display: flex;
     h4 {
       margin-bottom: 20px;

@@ -1,6 +1,10 @@
 <template>
   <div id="page-header">
-    <div class="today-display" v-if="!isSubpage" />
+    <div class="today-display" v-if="!isSubpage && meals">
+      <p>{{ sleep.duration || "-" }}</p>
+      <p class="amount">{{ totalAmount }}</p>
+      <p>{{ drink }}L</p>
+    </div>
     <div class="placeholder" v-if="disableBackButton" />
     <button
       class="rounded button-back"
@@ -28,10 +32,23 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import isEmpty from "lodash/isEmpty";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import { DateTime } from "luxon";
+import { Meal } from "@/types/firestore";
 
 export default defineComponent({
   name: "PageHeader",
+  computed: {
+    ...mapGetters("editor", ["meals", "sleep", "drink"]),
+    totalAmount(): string {
+      if (isEmpty(this.meals)) return "-";
+      let total = 0;
+      (this.meals as Meal[]).forEach(m =>
+        m.foods.forEach(f => (total += isNaN(f.amount) ? 0 : Number(f.amount)))
+      );
+      return total + "g";
+    }
+  },
   props: {
     title: {
       type: String,
@@ -54,11 +71,17 @@ export default defineComponent({
   },
   methods: {
     ...mapActions("auth", ["logOut"]),
+    ...mapActions("editor", ["setDate"]),
     goBack() {
       this.$router.back();
     },
     goTo(path: string) {
       this.$router.push(path);
+    }
+  },
+  mounted() {
+    if (!this.isSubpage) {
+      this.setDate(DateTime.now().toISODate());
     }
   }
 });
@@ -75,6 +98,28 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   padding: $headerPadding;
+
+  .today-display {
+    display: flex;
+    border: 4px solid var(--accent);
+    border-radius: 20px;
+    padding: 15px 20px;
+    background: $bg;
+    box-shadow: 0 0 20px 1px rgba(#000, 0.5);
+
+    p {
+      padding: 0 10px;
+      font-size: 1.4rem;
+
+      &.amount {
+        font-weight: 600;
+      }
+
+      &:not(:last-of-type) {
+        border-right: 1pt solid var(--accent);
+      }
+    }
+  }
 
   h2 {
     font-size: 3rem;

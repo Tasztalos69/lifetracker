@@ -15,7 +15,7 @@ export interface FoodRow extends FoodPart {
   showNewMeal: boolean;
 }
 
-interface NewFood extends Partial<Food> {
+export interface NewFood extends Partial<Food> {
   showDropdown: boolean;
   selectedCategory: string;
 }

@@ -7,6 +7,8 @@ import user from "./modules/user";
 import people from "./modules/people";
 import supplement from "./modules/supplement";
 import food from "./modules/food";
+import keypad from "@/store/modules/keypad";
+import editor from "@/store/modules/editor";
 
 export interface RootState {
   db: nFirestore;
@@ -31,6 +33,8 @@ export default createStore({
     user,
     people,
     supplement,
-    food
+    food,
+    keypad,
+    editor
   }
 });

@@ -8,12 +8,24 @@
         :key="sup.id"
       >
         <p>{{ sup.name }}</p>
-        <h6>{{ supplements[index] * sup.step + sup.unit }}</h6>
+        <h6>
+          {{
+            isNaN(supplements[index])
+              ? 0 + sup.unit
+              : supplements[index] * sup.step + sup.unit
+          }}
+        </h6>
         <div class="supplement-actions">
-          <button class="plus hollow" @click="changeSupplement(index, 1)">
+          <button
+            class="plus hollow"
+            @click="changeSupplement({ id: index, prefix: 1 })"
+          >
             <fa :icon="['fas', 'plus']" />
           </button>
-          <button class="plus hollow" @click="changeSupplement(index, -1)">
+          <button
+            class="plus hollow"
+            @click="changeSupplement({ id: index, prefix: -1 })"
+          >
             <fa :icon="['fas', 'minus']" />
           </button>
         </div>
@@ -37,11 +49,14 @@
               :style="{
                 height: waterHeight + '%'
               }"
-            >
-              <transition name="fade3ms">
-                <fa :icon="['fas', 'check']" v-if="waterHeight === 100" />
-              </transition>
-            </div>
+            />
+            <transition name="fade3ms">
+              <fa
+                :icon="['fas', 'check']"
+                class="water-checkmark"
+                v-if="waterHeight === 100"
+              />
+            </transition>
           </div>
           <h6>{{ drink }}L</h6>
         </div>
@@ -60,14 +75,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapGetters } from "vuex";
-import { SupplementDrinkRow } from "@/types/editor";
-import precisionRound from "@/utils/precisionRound";
+import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
   name: "EditorRowSupplementDrink",
   computed: {
     ...mapGetters(["supplementTypes", "selectedPersonTargets"]),
+    ...mapGetters("editor", ["drink", "supplements"]),
     waterHeight(): number {
       if (!this.selectedPersonTargets) return 0;
       return Math.min(
@@ -76,30 +90,8 @@ export default defineComponent({
       );
     }
   },
-  data(): SupplementDrinkRow {
-    return {
-      supplements: [],
-      drink: 0.5
-    };
-  },
-  methods: {
-    changeSupplement(id: number, prefix: number) {
-      if (prefix !== 1 && prefix !== -1) throw Error("Invalid prefix");
-      if (this.supplements[id] === 0 && prefix === -1) return;
-      this.supplements[id] += prefix;
-      //  TODO Write to DB
-    },
-    changeWater(amount: number) {
-      const newValue = this.drink + amount;
-      if (newValue < 0) return;
-      this.drink = precisionRound(newValue, 1);
-    }
-  },
-  async created() {
-    await this.$store.dispatch("fetchSupplementTypes");
-    this.supplements = new Array(this.supplementTypes.length).fill(0); // TODO Fill with actual server data
-    await this.$store.dispatch("getAvailablePeople");
-  }
+
+  methods: mapActions("editor", ["changeSupplement", "changeWater"])
 });
 </script>
 
@@ -180,13 +172,15 @@ export default defineComponent({
           width: 100%;
           color: $bg;
           transition: 0.2s all ease-in-out;
+        }
 
-          svg {
-            position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-          }
+        .water-checkmark {
+          color: $bg;
+          z-index: 1001;
+          position: absolute;
+          top: 55%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
       }
     }

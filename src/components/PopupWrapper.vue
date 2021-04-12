@@ -30,10 +30,11 @@ export default defineComponent({
 
 #popup {
   padding: 0 20px;
-  position: absolute;
+  position: fixed;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 9999;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

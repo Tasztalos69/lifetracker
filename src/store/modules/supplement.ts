@@ -18,11 +18,15 @@ const actions = {
   }: ActionContext<S, RootState>): Promise<void> {
     const db = validateDB(rootState);
     const supplementTypes = await db.collection("supplementTypes").get();
+    commit("purge");
     supplementTypes.forEach(doc => commit("add", constructFBData(doc)));
     return;
   }
 };
 const mutations = {
+  purge(state: S): void {
+    state.supplementTypes = [];
+  },
   add(state: S, supplementType: SupplementType): void {
     state.supplementTypes.push(supplementType);
   }
