@@ -30,6 +30,7 @@ export interface Person {
 }
 
 export interface Day extends DateSleepRow, FoodPart, SupplementDrinkRow {
+  id: string;
   personId: string;
 }
 

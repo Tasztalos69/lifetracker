@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "../store";
 import { Routes } from "../types/router";
 
-const { Dashboard, Login, People, Add } = Routes;
+const { Dashboard, Login, People, Add, See } = Routes;
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -23,6 +23,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/add",
     name: Add,
     component: () => import("@/views/Add.vue")
+  },
+  {
+    path: "/see",
+    name: See,
+    component: () => import("@/views/See.vue")
   }
 ];
 

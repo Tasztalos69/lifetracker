@@ -2,6 +2,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import {
+  faAngleDoubleDown,
   faBackspace,
   faCheck,
   faChevronDown,
@@ -41,6 +42,7 @@ library.add(
   faChevronLeft,
   faLongArrowAltRight,
   faBackspace,
+  faAngleDoubleDown,
   faDrumstickBite // OVERRIDE
 );
 

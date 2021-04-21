@@ -4,8 +4,10 @@ import {
   Nullable,
   Person,
   FoodCategory,
-  FoodType
+  FoodType,
+  Day
 } from "./firestore";
+import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
 
 export interface AuthState {
   authorized: boolean;
@@ -50,4 +52,9 @@ export interface KeypadState {
   delimiterCount: number;
   placeholder: string;
   error?: string;
+}
+
+export interface LogState {
+  days: Day[];
+  lastVisible: Nullable<QueryDocumentSnapshot>;
 }

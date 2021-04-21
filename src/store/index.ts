@@ -9,6 +9,7 @@ import supplement from "./modules/supplement";
 import food from "./modules/food";
 import keypad from "@/store/modules/keypad";
 import editor from "@/store/modules/editor";
+import log from "@/store/modules/log";
 
 export interface RootState {
   db: nFirestore;
@@ -35,6 +36,7 @@ export default createStore({
     supplement,
     food,
     keypad,
-    editor
+    editor,
+    log
   }
 });
