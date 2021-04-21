@@ -1,6 +1,13 @@
 <template>
   <div class="log-card">
-    <section class="dropdown-toggle" :class="{ active: day.meals.length > 0 }">
+    <div class="date-container">
+      <h2 class="date">{{ day.date.replaceAll("-", ".").concat(".") }}</h2>
+    </div>
+    <section
+      class="dropdown-toggle"
+      :class="{ active: day.meals.length > 0, dropped: isOpen }"
+      @click="toggleDropdown"
+    >
       <fa :icon="['fas', 'angle-double-down']" />
     </section>
     <section class="sleep">
@@ -40,6 +47,13 @@
       <h3>drink</h3>
       <p>{{ day.drink }}l</p>
     </section>
+    <ul class="food-list" v-if="isOpen">
+      <li v-for="(m, i) in day.meals" :key="i">
+        <h4>{{ m.time }}</h4>
+        <p>{{ m.foods.map(f => foodType(f.typeId).name || "?").join(", ") }}</p>
+        <p>{{ m.foods.map(f => f.amount + "g").join(", ") }}</p>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -47,10 +61,15 @@
 import { defineComponent } from "vue";
 import { Day, SupplementType } from "@/types/firestore";
 import isEmpty from "lodash/isEmpty";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
   name: "LogCard",
+  data() {
+    return {
+      isOpen: false
+    };
+  },
   props: {
     day: {
       type: Object as () => Day,
@@ -58,6 +77,7 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapGetters(["foodType"]),
     supplementTypes(): SupplementType[] {
       return this.$store.getters.supplementTypes;
     },
@@ -70,7 +90,12 @@ export default defineComponent({
       return total + "g";
     }
   },
-  methods: mapActions(["fetchSupplementTypes"]),
+  methods: {
+    ...mapActions(["fetchSupplementTypes"]),
+    toggleDropdown(): void {
+      if (this.day.meals.length > 0) this.isOpen = !this.isOpen;
+    }
+  },
   created() {
     this.fetchSupplementTypes();
   }
@@ -80,17 +105,46 @@ export default defineComponent({
 <style scoped lang="scss">
 @use "../scss/variables" as *;
 .log-card {
-  position: relative;
   display: flex;
+  position: relative;
+  flex-wrap: wrap;
   width: 100%;
   border: 3pt solid var(--accent);
   border-radius: 10px;
   margin-bottom: 40px;
-  padding: 20px 10px;
+  padding: 10px 10px 20px;
   align-items: stretch;
   justify-content: space-between;
   background: $bg;
   box-shadow: 0 3px 17px 2px rgba(#000, 0.3);
+  transition: 0.2s all ease-in-out;
+
+  * {
+    transition: 0.2s all ease-in-out;
+  }
+
+  .date-container {
+    position: relative;
+    flex-basis: 100%;
+    margin-bottom: 20px;
+    margin-left: 10px;
+
+    .date {
+      position: relative;
+      width: min-content;
+      font-weight: 700;
+
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2pt;
+        background: var(--accent);
+      }
+    }
+  }
 
   section {
     flex-grow: 1;
@@ -111,6 +165,7 @@ export default defineComponent({
 
     svg {
       font-size: 3rem;
+      transform: scaleY(1);
     }
 
     &.active {
@@ -118,6 +173,12 @@ export default defineComponent({
 
       svg {
         cursor: pointer;
+      }
+    }
+
+    &.dropped {
+      svg {
+        transform: scaleY(-1);
       }
     }
   }
@@ -204,8 +265,38 @@ export default defineComponent({
     }
   }
 
-  .drink p {
-    font-weight: 500;
+  .drink {
+    p {
+      font-weight: 500;
+    }
+  }
+
+  .food-list {
+    margin-top: 10px;
+    border-top: 2px dashed darken($disabled, 30%);
+    flex-basis: 100%;
+    list-style: none;
+
+    li {
+      margin-top: 10px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      h4 {
+        width: 20%;
+        font-weight: 500;
+        font-size: 1.3rem;
+      }
+
+      p {
+        text-transform: capitalize;
+        width: 40%;
+        font-weight: 300;
+        font-size: 1.2rem;
+      }
+    }
   }
 }
 </style>

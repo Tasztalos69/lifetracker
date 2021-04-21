@@ -38,11 +38,13 @@ export default defineComponent({
   },
   methods: {
     ...mapActions("log", ["fetchDays"]),
+    ...mapActions(["fetchFoodCategoriesAndTypes"]),
     ...mapMutations("log", ["purgeDays"])
   },
   created() {
     this.purgeDays();
     this.fetchDays();
+    this.fetchFoodCategoriesAndTypes();
   }
 });
 </script>
