@@ -1,7 +1,12 @@
 <template>
   <div id="page-header">
     <div class="today-display" v-if="!isSubpage && meals">
-      <p>{{ sleep.duration || "-" }}</p>
+      <p>
+        {{
+          (sleep.duration && sleep.duration.replace(":", "h").concat("m")) ||
+            "-"
+        }}
+      </p>
       <p class="amount">{{ totalAmount }}</p>
       <p>{{ drink }}L</p>
     </div>
