@@ -18,6 +18,7 @@ import addZero from "@/utils/addZero";
 
 interface S extends DateSleepRow, FoodRow, SupplementDrinkRow {
   dayId: string | undefined;
+  dateStamp: string;
 }
 
 const validateTime = (value: string): boolean => {
@@ -49,6 +50,8 @@ const saveToDB = async (state: S, rootState: RootState): Promise<void> => {
   const db = validateDB(rootState);
   const days = db.collection("days");
 
+  console.log("saving to DB, dayId", state.dayId);
+
   // Exclude properties from firestore
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -62,13 +65,15 @@ const saveToDB = async (state: S, rootState: RootState): Promise<void> => {
   if (state.dayId) {
     await days.doc(state.dayId).set(stateCloneWithoutDayId);
   } else {
-    await days.add(stateCloneWithoutDayId);
+    const newDay = await days.add(stateCloneWithoutDayId);
+    state.dayId = newDay.id;
   }
 };
 
 const state = (): S => ({
   dayId: undefined,
   date: "",
+  dateStamp: "",
   sleep: {
     start: "",
     end: ""
@@ -86,6 +91,7 @@ const state = (): S => ({
 
 const getters = {
   date: (s: S): string => s.date,
+  dateStamp: (s: S): string => s.dateStamp,
   sleep: (s: S): Sleep => s.sleep,
   newMeal: (s: S): Partial<Meal> => s.newMeal,
   showNewMeal: (s: S): boolean => s.showNewMeal,
@@ -181,6 +187,7 @@ const actions = {
   ): Promise<void> {
     const stateClone: any = state;
     stateClone.date = date;
+    stateClone.dateStamp = DateTime.fromISO(date).valueOf();
     commit("replaceState", stateClone);
     await dispatch("fetchDayData");
   },
@@ -196,21 +203,24 @@ const actions = {
     try {
       const days = await db.collection("days");
       const currentDayQS = await days.where("date", "==", date).get();
-      let currentDay: string | undefined = undefined;
+      let currentDay: string | undefined;
       currentDayQS.forEach(d => (currentDay = d.id));
       commit("setDayId", currentDay);
+
       if (currentDay) {
         console.log("Day exists, loading data.");
         let currentDayData: DocumentData | undefined;
         currentDayQS.forEach(d => (currentDayData = d.data()));
+
         if (!currentDayData) return;
         commit("replaceStateWithObject", currentDayData);
       } else {
-        console.log("populating with default data.");
+        console.log("entered date", date);
 
         commit("replaceStateWithObject", {
           dayId: undefined,
-          date: state.date,
+          date,
+          dateStamp: DateTime.fromISO(state.date).valueOf(),
           sleep: {
             start: "",
             end: ""
