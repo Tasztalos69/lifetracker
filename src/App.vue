@@ -38,10 +38,9 @@ export default defineComponent({
   --accent: #000;
 }
 
-*::selection,
-*::-moz-selection {
-  color: $bg;
+*::selection {
   background: var(--accent);
+  color: $bg;
 }
 
 *:focus,
