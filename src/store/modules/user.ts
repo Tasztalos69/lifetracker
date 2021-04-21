@@ -2,12 +2,12 @@ import {
   ColorSchemes,
   UserSettings,
   UserSettings as S
-} from "../../types/firestore";
+} from "@/types/firestore";
 import { ActionContext } from "vuex";
-import { RootState } from "../index";
-import router from "../../router";
-import { Routes } from "../../types/router";
-import validateDB from "../../utils/validateDB";
+import { RootState } from "@/store";
+import router from "@/router";
+import { Routes } from "@/types/router";
+import validateDB from "@/utils/validateDB";
 
 const state = (): S => ({
   selectedPerson: null,
