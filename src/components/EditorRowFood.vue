@@ -171,11 +171,10 @@ export default defineComponent({
       "toggleDropdown",
       "toggleShowNewMeal",
       "addNewFood",
-      "removeNewFood",
       "setSelectedCategory",
       "setSelectedType"
     ]),
-    ...mapActions("editor", ["confirmNewMeal"]),
+    ...mapActions("editor", ["confirmNewMeal", "removeNewFood"]),
     isEmpty,
     selectedCategoryExists(index: number): boolean {
       return !isEmpty(this.newFood[index].selectedCategory);

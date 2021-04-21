@@ -308,6 +308,13 @@ const actions = {
     await saveToDB(newState, rootState);
 
     commit("setDrink", precisionRound(newValue, 1));
+  },
+  async removeNewFood(
+    { commit }: ActionContext<S, RootState>,
+    i: number
+  ): Promise<void> {
+    commit("keypad/discard", null, { root: true });
+    commit("removeNewFood", i);
   }
 };
 
