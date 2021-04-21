@@ -14,7 +14,8 @@ const state = (): S => ({
 const getters = {
   all: (state: S): S => state,
   ref: (state: S): string[] => state.ref,
-  value: (state: S): string => state.value
+  value: (state: S): string => state.value,
+  maxLength: (state: S): number => state.maxLength
 };
 const actions = {
   setError({ commit }: ActionContext<S, RootState>, text: string): void {

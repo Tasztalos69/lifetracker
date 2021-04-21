@@ -112,6 +112,15 @@ const actions = {
     let value: string = rootGetters["keypad/value"];
     const field: string[] = rootGetters["keypad/ref"];
 
+    console.log(value.length, rootGetters["keypad/maxLength"]);
+    if (
+      !field.includes("amount") &&
+      value.length !== rootGetters["keypad/maxLength"]
+    )
+      return dispatch("keypad/setError", "Invalid format!", {
+        root: true
+      });
+
     let isValid: boolean;
     switch (field[0]) {
       case "newFood":
