@@ -1,5 +1,10 @@
 <template>
   <div class="log-card">
+    <fa
+      v-if="isContentManager"
+      :icon="['far', 'times-circle']"
+      class="btn-delete"
+    />
     <div class="date-container">
       <h2 class="date">{{ day.date.replaceAll('-', '.').concat('.') }}</h2>
     </div>
@@ -78,6 +83,7 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters(['foodType']),
+    ...mapGetters('auth', ['isContentManager']),
     supplementTypes(): SupplementType[] {
       return this.$store.getters.supplementTypes;
     },
@@ -122,6 +128,15 @@ export default defineComponent({
 
   * {
     transition: 0.2s all ease-in-out;
+  }
+
+  .btn-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    z-index: 10;
+    cursor: pointer;
   }
 
   .date-container {
