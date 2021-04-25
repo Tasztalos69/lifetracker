@@ -1,0 +1,8 @@
+{
+  "singleQuote": true,
+  "packageManager": "yarn",
+  "trailingComma": "all",
+  "proseWrap": "never",
+  "arrowParens": "avoid",
+  "javascript.format.semicolons": "insert"
+}

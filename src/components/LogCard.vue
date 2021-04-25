@@ -1,7 +1,7 @@
 <template>
   <div class="log-card">
     <div class="date-container">
-      <h2 class="date">{{ day.date.replaceAll("-", ".").concat(".") }}</h2>
+      <h2 class="date">{{ day.date.replaceAll('-', '.').concat('.') }}</h2>
     </div>
     <section
       class="dropdown-toggle"
@@ -15,11 +15,11 @@
       <h3>sleep</h3>
       <div class="sleep-flexbox">
         <div class="sleep-times">
-          <p>{{ day.sleep.start || "?" }}</p>
-          <p>{{ day.sleep.end || "?" }}</p>
+          <p>{{ day.sleep.start || '?' }}</p>
+          <p>{{ day.sleep.end || '?' }}</p>
         </div>
         <span class="bracket" v-if="day.sleep.duration" />
-        <h4>{{ day.sleep.duration.replace(":", "h").concat("m") || "" }}</h4>
+        <h4>{{ day.sleep.duration.replace(':', 'h').concat('m') || '' }}</h4>
       </div>
     </section>
     <section class="food">
@@ -50,60 +50,61 @@
     <ul class="food-list" v-if="isOpen">
       <li v-for="(m, i) in day.meals" :key="i">
         <h4>{{ m.time }}</h4>
-        <p>{{ m.foods.map(f => foodType(f.typeId).name || "?").join(", ") }}</p>
-        <p>{{ m.foods.map(f => f.amount + "g").join(", ") }}</p>
+        <p>{{ m.foods.map(f => foodType(f.typeId).name || '?').join(', ') }}</p>
+        <p>{{ m.foods.map(f => f.amount + 'g').join(', ') }}</p>
       </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { Day, SupplementType } from "@/types/firestore";
-import isEmpty from "lodash/isEmpty";
-import { mapActions, mapGetters } from "vuex";
+import { defineComponent } from 'vue';
+import { Day, SupplementType } from '@/types/firestore';
+import isEmpty from 'lodash/isEmpty';
+import { mapActions, mapGetters } from 'vuex';
 
 export default defineComponent({
-  name: "LogCard",
+  name: 'LogCard',
   data() {
     return {
-      isOpen: false
+      isOpen: false,
     };
   },
   props: {
     day: {
       type: Object as () => Day,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    ...mapGetters(["foodType"]),
+    ...mapGetters(['foodType']),
     supplementTypes(): SupplementType[] {
       return this.$store.getters.supplementTypes;
     },
     totalAmount(): string {
-      if (isEmpty(this.day.meals)) return "0g";
+      if (isEmpty(this.day.meals)) return '0g';
       let total = 0;
       this.day.meals.forEach(m =>
-        m.foods.forEach(f => (total += isNaN(f.amount) ? 0 : Number(f.amount)))
+        m.foods.forEach(f => (total += isNaN(f.amount) ? 0 : Number(f.amount))),
       );
-      return total + "g";
-    }
+      return total + 'g';
+    },
   },
   methods: {
-    ...mapActions(["fetchSupplementTypes"]),
+    ...mapActions(['fetchSupplementTypes']),
     toggleDropdown(): void {
       if (this.day.meals.length > 0) this.isOpen = !this.isOpen;
-    }
+    },
   },
   created() {
     this.fetchSupplementTypes();
-  }
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
+
 .log-card {
   display: flex;
   position: relative;
@@ -135,7 +136,7 @@ export default defineComponent({
       font-weight: 700;
 
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         bottom: -2px;
         left: 0;
@@ -176,10 +177,8 @@ export default defineComponent({
       }
     }
 
-    &.dropped {
-      svg {
-        transform: scaleY(-1);
-      }
+    &.dropped svg {
+      transform: scaleY(-1);
     }
   }
 
@@ -235,19 +234,17 @@ export default defineComponent({
     }
   }
 
-  .food {
-    p {
-      vertical-align: middle;
-      font-weight: 300;
+  .food p {
+    vertical-align: middle;
+    font-weight: 300;
 
-      svg {
-        font-size: 1.5rem;
-        margin: 0 10px;
-      }
+    svg {
+      font-size: 1.5rem;
+      margin: 0 10px;
+    }
 
-      strong {
-        font-weight: 500;
-      }
+    strong {
+      font-weight: 500;
     }
   }
 
@@ -265,10 +262,8 @@ export default defineComponent({
     }
   }
 
-  .drink {
-    p {
-      font-weight: 500;
-    }
+  .drink p {
+    font-weight: 500;
   }
 
   .food-list {

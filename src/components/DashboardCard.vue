@@ -10,46 +10,46 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapGetters } from "vuex";
+import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
-  name: "DashboardCard",
+  name: 'DashboardCard',
   props: {
     elevated: {
       type: Boolean,
-      default: false
+      default: false,
     },
     icon: {
       type: String,
       required: true,
-      validator: (v: string) => v.split("/").length === 2
+      validator: (v: string) => v.split('/').length === 2,
     },
     target: {
       type: String,
-      required: true
+      required: true,
     },
     bottomText: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    ...mapGetters("auth", ["isContentManager"]),
+    ...mapGetters('auth', ['isContentManager']),
     active: function(): boolean {
       return !this.elevated || this.isContentManager;
-    }
+    },
   },
   methods: {
     goTo(path: string) {
       this.active && this.$router.push(path);
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
 .dashboard-card {
   position: relative;
@@ -59,15 +59,6 @@ export default defineComponent({
   border-radius: 50px;
   border: 7px solid $disabled;
   box-shadow: 0 0 25px 4px rgba($disabled, 0.6);
-
-  &.active {
-    cursor: pointer;
-    border: 7px solid var(--accent);
-    box-shadow: 0 0 25px 4px rgba(#000, 0.6);
-    .content {
-      color: var(--accent);
-    }
-  }
 
   .content {
     position: absolute;
@@ -92,6 +83,16 @@ export default defineComponent({
       font-size: 2.6rem;
       font-weight: 700;
       text-transform: uppercase;
+    }
+  }
+
+  &.active {
+    cursor: pointer;
+    border: 7px solid var(--accent);
+    box-shadow: 0 0 25px 4px rgba(#000, 0.6);
+
+    .content {
+      color: var(--accent);
     }
   }
 }

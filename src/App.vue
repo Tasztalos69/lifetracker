@@ -4,34 +4,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import PopupWrapper from "./components/PopupWrapper.vue";
+import { defineComponent } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import PopupWrapper from './components/PopupWrapper.vue';
 
 export default defineComponent({
   components: { PopupWrapper },
-  computed: mapGetters(["db"]),
+  computed: mapGetters(['db']),
   created: function() {
-    this.$store.commit("setDB", firebase.firestore());
+    this.$store.commit('setDB', firebase.firestore());
     firebase.auth().onAuthStateChanged(user => {
       this.setUser({ user });
     });
   },
-  methods: { ...mapActions("auth", ["setUser"]) }
+  methods: { ...mapActions('auth', ['setUser']) },
 });
 </script>
 
 <style lang="scss">
-@use "scss/variables" as *;
+@use 'scss/variables' as *;
 
-@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,600&family=Roboto:wght@300;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,600&family=Roboto:wght@300;500&display=swap');
 
 * {
   margin: 0;
   padding: 0;
-  font-family: "Raleway", sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 
 :root {
@@ -71,7 +71,7 @@ button {
 }
 
 span.number {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .fade5ms-enter-active,

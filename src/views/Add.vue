@@ -11,64 +11,64 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapGetters, mapMutations } from "vuex";
-import isEmpty from "lodash/isEmpty";
-import PageHeader from "@/components/PageHeader.vue";
-import EditorRowDateSleep from "@/components/EditorRowDateSleep.vue";
-import EditorRowFood from "@/components/EditorRowFood.vue";
-import EditorRowSupplementDrink from "@/components/EditorRowSupplementDrink.vue";
-import EditorKeypad from "@/components/EditorKeypad.vue";
+import { defineComponent } from 'vue';
+import { mapGetters, mapMutations } from 'vuex';
+import isEmpty from 'lodash/isEmpty';
+import PageHeader from '@/components/PageHeader.vue';
+import EditorRowDateSleep from '@/components/EditorRowDateSleep.vue';
+import EditorRowFood from '@/components/EditorRowFood.vue';
+import EditorRowSupplementDrink from '@/components/EditorRowSupplementDrink.vue';
+import EditorKeypad from '@/components/EditorKeypad.vue';
 
 export default defineComponent({
-  name: "Add",
+  name: 'Add',
   computed: {
-    ...mapGetters(["keypad/ref", "editor/date"]),
+    ...mapGetters(['keypad/ref', 'editor/date']),
     date(): string {
-      return this["editor/date"];
+      return this['editor/date'];
     },
     shouldDisplayKeypad(): boolean {
-      return !isEmpty(this["keypad/ref"]);
-    }
+      return !isEmpty(this['keypad/ref']);
+    },
   },
   methods: {
-    ...mapMutations("editor", ["setDayId", "replaceStateWithObject"]),
-    isEmpty
+    ...mapMutations('editor', ['setDayId', 'replaceStateWithObject']),
+    isEmpty,
   },
   components: {
     EditorKeypad,
     EditorRowSupplementDrink,
     EditorRowFood,
     EditorRowDateSleep,
-    PageHeader
+    PageHeader,
   },
   created() {
     this.setDayId(undefined);
     this.replaceStateWithObject({
       dayId: undefined,
-      date: "",
+      date: '',
       sleep: {
-        start: "",
-        end: ""
+        start: '',
+        end: '',
       },
       newMeal: {
-        time: "",
-        foods: []
+        time: '',
+        foods: [],
       },
       showNewMeal: false,
       newFood: [],
       meals: [],
       supplements: [],
-      drink: 0
+      drink: 0,
     });
-    this.$store.dispatch("fetchSupplementTypes");
-    this.$store.dispatch("getAvailablePeople");
-  }
+    this.$store.dispatch('fetchSupplementTypes');
+    this.$store.dispatch('getAvailablePeople');
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
 #editor {
   position: relative;
@@ -120,7 +120,7 @@ export default defineComponent({
       text-indent: -0.8rem;
 
       &:before {
-        content: " ";
+        content: ' ';
         display: inline-block;
         width: 1rem;
       }
@@ -142,26 +142,24 @@ export default defineComponent({
       transition: 0.2s all ease-in-out;
     }
 
-    &.inactive {
-      section:not(#s-date) {
+    &.inactive section:not(#s-date) {
+      color: $disabled;
+
+      button {
+        background: $disabled;
+        color: $bg;
+        cursor: default;
+      }
+
+      .hollow {
         color: $disabled;
+        background: $bg;
+        border: 3px solid $disabled;
+      }
 
-        button {
-          background: $disabled;
-          color: $bg;
-          cursor: default;
-        }
-
-        .hollow {
-          color: $disabled;
-          background: $bg;
-          border: 3px solid $disabled;
-        }
-
-        .water-container {
-          border: 3px solid $disabled;
-          border-top: none;
-        }
+      .water-container {
+        border: 3px solid $disabled;
+        border-top: none;
       }
     }
   }

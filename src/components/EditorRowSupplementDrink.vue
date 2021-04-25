@@ -47,7 +47,7 @@
             <div
               class="water"
               :style="{
-                height: waterHeight + '%'
+                height: waterHeight + '%',
               }"
             />
             <transition name="fade3ms">
@@ -74,50 +74,50 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { defineComponent } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default defineComponent({
-  name: "EditorRowSupplementDrink",
+  name: 'EditorRowSupplementDrink',
   computed: {
-    ...mapGetters(["supplementTypes", "selectedPersonTargets"]),
-    ...mapGetters("editor", ["drink", "supplements"]),
+    ...mapGetters(['supplementTypes', 'selectedPersonTargets']),
+    ...mapGetters('editor', ['drink', 'supplements']),
     waterHeight(): number {
       if (!this.selectedPersonTargets) return 0;
       return Math.min(
         (this.drink / this.selectedPersonTargets.drink) * 100,
-        100
+        100,
       );
-    }
+    },
   },
 
-  methods: mapActions("editor", ["changeSupplement", "changeWater"])
+  methods: mapActions('editor', ['changeSupplement', 'changeWater']),
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
-#s-supplement {
-  .supplement-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0;
+@use '../scss/variables' as *;
 
-    p {
-      flex-grow: 0.4;
-      text-transform: uppercase;
-      font-size: 1.3rem;
-    }
+#s-supplement .supplement-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
 
-    button {
-      margin-right: 5px;
-    }
+  p {
+    flex-grow: 0.4;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+  }
+
+  button {
+    margin-right: 5px;
   }
 }
 
 #s-drink {
   flex-grow: 0 !important;
+
   .drink-content {
     display: flex;
     justify-content: center;
@@ -137,6 +137,7 @@ export default defineComponent({
         padding-left: 10px;
         padding-right: 5px;
         width: auto;
+
         .icon {
           margin: 0 6px;
         }
@@ -150,6 +151,7 @@ export default defineComponent({
 
       &:nth-of-type(3) {
         align-items: flex-start;
+
         button:nth-child(2) {
           padding-left: 5px;
           padding-right: 10px;

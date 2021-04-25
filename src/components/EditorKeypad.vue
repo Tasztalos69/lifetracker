@@ -43,7 +43,7 @@
         {{
           keypad.ref
             .map(r => (isNaN(+r) ? camelCaseToSentenceCase(r) : r + 1))
-            .join("/")
+            .join('/')
         }}
       </p>
     </div>
@@ -51,54 +51,54 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapGetters, mapMutations } from "vuex";
-import isEmpty from "lodash/isEmpty";
-import camelCaseToSentenceCase from "@/utils/camelCaseToSentenceCase";
-import isMobile from "@/utils/isMobile";
+import { defineComponent } from 'vue';
+import { mapGetters, mapMutations } from 'vuex';
+import isEmpty from 'lodash/isEmpty';
+import camelCaseToSentenceCase from '@/utils/camelCaseToSentenceCase';
+import isMobile from '@/utils/isMobile';
 
 export default defineComponent({
-  name: "EditorKeypad",
+  name: 'EditorKeypad',
   computed: {
-    ...mapGetters("keypad", {
-      keypad: "all"
+    ...mapGetters('keypad', {
+      keypad: 'all',
     }),
     isMobile,
     showValue(): boolean {
       return !isEmpty(this.keypad.value);
-    }
+    },
   },
   methods: {
-    ...mapMutations({ add: "keypad/add" }),
+    ...mapMutations({ add: 'keypad/add' }),
     camelCaseToSentenceCase,
     delOne() {
       this.keypad.value = this.keypad.value.slice(0, -1);
-    }
+    },
   },
   directives: {
     focus: {
       mounted: function(el) {
         el.focus();
-      }
-    }
+      },
+    },
   },
   mounted() {
     // Assign grid areas to elements in keypad
-    const keypad = document.querySelector("#keypad");
+    const keypad = document.querySelector('#keypad');
     if (!keypad) return;
     const keys = (keypad.childNodes as unknown) as HTMLDivElement[];
     keys.forEach(key => {
       const HTMLKey: HTMLDivElement = key;
       HTMLKey.style.gridArea = HTMLKey.classList[0];
       const classList = [...HTMLKey.classList];
-      const banned = ["display", "save"];
+      const banned = ['display', 'save'];
       if (classList.some(c => banned.includes(c))) return;
 
-      HTMLKey.addEventListener("click", () => {
+      HTMLKey.addEventListener('click', () => {
         if (
-          classList.includes("delimiter") &&
+          classList.includes('delimiter') &&
           (
-            this.keypad.value.match(new RegExp(this.keypad.delimiter, "g")) ||
+            this.keypad.value.match(new RegExp(this.keypad.delimiter, 'g')) ||
             []
           ).length === this.keypad.delimiterCount
         )
@@ -107,12 +107,12 @@ export default defineComponent({
         this.add(HTMLKey.textContent);
       });
     });
-  }
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
 #keypad-wrapper {
   display: flex;
@@ -137,11 +137,11 @@ export default defineComponent({
   grid-template-rows: repeat(5, 1fr);
   gap: 20px 20px;
   grid-template-areas:
-    "display display display"
-    "n7 n8 n9"
-    "n4 n5 n6"
-    "n1 n2 n3"
-    "n0 delimiter save";
+    'display display display'
+    'n7 n8 n9'
+    'n4 n5 n6'
+    'n1 n2 n3'
+    'n0 delimiter save';
   border: 5px solid var(--accent);
   padding: 20px;
   border-radius: 30px;
@@ -190,7 +190,7 @@ export default defineComponent({
   button {
     height: 80px;
     width: 80px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     border-radius: 20px;
     background: $bg;
     border: 4px solid var(--accent);
@@ -208,10 +208,12 @@ export default defineComponent({
 .current-display {
   margin-top: 30px;
   margin-left: 15px;
+
   h3 {
     text-transform: uppercase;
     font-size: 1.5rem;
   }
+
   p {
     font-size: 1.1rem;
     text-transform: uppercase;

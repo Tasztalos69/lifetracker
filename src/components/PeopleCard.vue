@@ -11,30 +11,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { mapActions, mapGetters } from "vuex";
-import { Person } from "@/types/firestore";
+import { defineComponent, PropType } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
+import { Person } from '@/types/firestore';
 
 export default defineComponent({
-  name: "PeopleCard",
-  computed: mapGetters(["availablePeople"]),
-  methods: mapActions(["setSelectedPerson"]),
+  name: 'PeopleCard',
+  computed: mapGetters(['availablePeople']),
+  methods: mapActions(['setSelectedPerson']),
 
   props: {
     person: {
-      type: Object as PropType<Person>
+      type: Object as PropType<Person>,
     },
     isSelected: {
       type: Boolean,
       required: false,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
 .available-people-card {
   display: flex;

@@ -15,7 +15,7 @@
               meal.foods.reduce(
                 (acc, cur) =>
                   (acc += isNaN(cur.amount) ? 0 : parseInt(cur.amount)),
-                0
+                0,
               )
             }}g
           </h3>
@@ -33,7 +33,7 @@
                 delimiterCount: 1,
                 ref: ['newMeal', 'time'],
                 maxLength: 5,
-                value: newMeal.time
+                value: newMeal.time,
               })
             "
           >
@@ -57,7 +57,7 @@
                     {{
                       (foodType(newFood[i].typeId) &&
                         foodType(newFood[i].typeId).name) ||
-                        "Choose..."
+                        'Choose...'
                     }}
                   </span>
                   <fa :icon="['fas', 'chevron-down']" />
@@ -115,7 +115,7 @@
                       delimiterCount: 0,
                       ref: ['newFood', i, 'amount'],
                       maxLength: 4,
-                      value: newFood[i].amount
+                      value: newFood[i].amount,
                     })
                   "
                 >
@@ -147,34 +147,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import isEmpty from "lodash/isEmpty";
-import { mapActions, mapGetters, mapMutations } from "vuex";
-import { FoodType, Nullable } from "@/types/firestore";
+import { defineComponent } from 'vue';
+import isEmpty from 'lodash/isEmpty';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { FoodType, Nullable } from '@/types/firestore';
 
 export default defineComponent({
-  name: "EditorRowFood",
+  name: 'EditorRowFood',
   computed: {
-    ...mapGetters(["foodCategories", "foodTypes", "foodType"]),
-    ...mapGetters("editor", [
-      "meals",
-      "newMeal",
-      "showNewMeal",
-      "newFood",
-      "date"
-    ])
+    ...mapGetters(['foodCategories', 'foodTypes', 'foodType']),
+    ...mapGetters('editor', [
+      'meals',
+      'newMeal',
+      'showNewMeal',
+      'newFood',
+      'date',
+    ]),
   },
 
   methods: {
-    ...mapMutations({ init: "keypad/init", discard: "keypad/discard" }),
-    ...mapMutations("editor", [
-      "toggleDropdown",
-      "toggleShowNewMeal",
-      "addNewFood",
-      "setSelectedCategory",
-      "setSelectedType"
+    ...mapMutations({ init: 'keypad/init', discard: 'keypad/discard' }),
+    ...mapMutations('editor', [
+      'toggleDropdown',
+      'toggleShowNewMeal',
+      'addNewFood',
+      'setSelectedCategory',
+      'setSelectedType',
     ]),
-    ...mapActions("editor", ["confirmNewMeal", "removeNewFood"]),
+    ...mapActions('editor', ['confirmNewMeal', 'removeNewFood']),
     isEmpty,
     selectedCategoryExists(index: number): boolean {
       return !isEmpty(this.newFood[index].selectedCategory);
@@ -182,35 +182,34 @@ export default defineComponent({
     typesInCategory(index: number): Nullable<FoodType[]> {
       if (!this.selectedCategoryExists) return null;
       return this.foodTypes(this.newFood[index].selectedCategory);
-    }
+    },
   },
   async created() {
-    await this.$store.dispatch("fetchFoodCategoriesAndTypes");
-  }
+    await this.$store.dispatch('fetchFoodCategoriesAndTypes');
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
-#s-food {
-  #existing-meals {
-    width: 80%;
-    margin-left: 10%;
+#s-food #existing-meals {
+  width: 80%;
+  margin-left: 10%;
 
-    .existing-meal {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 10px;
-      margin: 10px 0;
+  .existing-meal {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin: 10px 0;
 
-      &:not(:last-of-type) {
-        border-bottom: 2px dashed rgba($disabled, 0.4);
-      }
+    &:not(:last-of-type) {
+      border-bottom: 2px dashed rgba($disabled, 0.4);
     }
   }
+
   .add-new-meal {
     width: 100% !important;
   }
@@ -218,6 +217,7 @@ export default defineComponent({
   .new-meal {
     margin-top: 40px;
     display: flex;
+
     h4 {
       margin-bottom: 20px;
     }
@@ -248,6 +248,7 @@ export default defineComponent({
 
         .food-editor {
           position: relative;
+
           .dropdown-toggle {
             margin-bottom: 10px;
             display: flex;
@@ -259,6 +260,7 @@ export default defineComponent({
 
             span {
               font-weight: 700;
+
               &.placeholder {
                 font-weight: 400;
                 color: $disabled;
@@ -280,10 +282,11 @@ export default defineComponent({
               list-style: none;
 
               li {
+                $li-vpadding: 12px;
+
                 cursor: pointer;
                 padding-left: 10px;
                 padding-right: 10px;
-                $li-vpadding: 12px;
                 padding-top: $li-vpadding;
                 white-space: nowrap;
 

@@ -3,8 +3,8 @@
     <div class="today-display" v-if="!isSubpage && meals">
       <p>
         {{
-          (sleep.duration && sleep.duration.replace(":", "h").concat("m")) ||
-            "-"
+          (sleep.duration && sleep.duration.replace(':', 'h').concat('m')) ||
+            '-'
         }}
       </p>
       <p class="amount">{{ totalAmount }}</p>
@@ -35,70 +35,71 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import isEmpty from "lodash/isEmpty";
-import { mapActions, mapGetters } from "vuex";
-import { DateTime } from "luxon";
-import { Meal } from "@/types/firestore";
+import { defineComponent } from 'vue';
+import isEmpty from 'lodash/isEmpty';
+import { mapActions, mapGetters } from 'vuex';
+import { DateTime } from 'luxon';
+import { Meal } from '@/types/firestore';
 
 export default defineComponent({
-  name: "PageHeader",
+  name: 'PageHeader',
   computed: {
-    ...mapGetters("editor", ["meals", "sleep", "drink"]),
+    ...mapGetters('editor', ['meals', 'sleep', 'drink']),
     totalAmount(): string {
-      if (isEmpty(this.meals)) return "-";
+      if (isEmpty(this.meals)) return '-';
       let total = 0;
       (this.meals as Meal[]).forEach(m =>
-        m.foods.forEach(f => (total += isNaN(f.amount) ? 0 : Number(f.amount)))
+        m.foods.forEach(f => (total += isNaN(f.amount) ? 0 : Number(f.amount))),
       );
-      return total + "g";
-    }
+      return total + 'g';
+    },
   },
   props: {
     title: {
       type: String,
       required: true,
-      validator: v => !isEmpty(v)
+      validator: v => !isEmpty(v),
     },
     titleIcon: {
       type: String,
       default: undefined,
-      validator: (v: string) => v.split("/").length === 2
+      validator: (v: string) => v.split('/').length === 2,
     },
     isSubpage: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disableBackButton: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
-    ...mapActions("auth", ["logOut"]),
-    ...mapActions("editor", ["setDate"]),
+    ...mapActions('auth', ['logOut']),
+    ...mapActions('editor', ['setDate']),
     goBack() {
       this.$router.back();
     },
     goTo(path: string) {
       this.$router.push(path);
-    }
+    },
   },
   mounted() {
     if (!this.isSubpage) {
       this.setDate(DateTime.now().toISODate());
     }
-  }
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
 #page-header {
+  $headerPadding: 20px;
+
   display: flex;
   flex-direction: row;
-  $headerPadding: 20px;
   width: calc(100% - #{$headerPadding} * 2);
   justify-content: space-between;
   align-items: center;
@@ -130,6 +131,7 @@ export default defineComponent({
     font-size: 3rem;
     font-weight: 700;
     text-transform: uppercase;
+
     svg {
       margin-right: 10px;
     }
@@ -144,10 +146,8 @@ export default defineComponent({
     margin-left: -5px;
   }
 
-  .nav-buttons {
-    button:not(:last-child) {
-      margin-right: 20px;
-    }
+  .nav-buttons button:not(:last-child) {
+    margin-right: 20px;
   }
 
   .placeholder {

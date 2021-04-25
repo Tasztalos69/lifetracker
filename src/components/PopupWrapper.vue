@@ -13,20 +13,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { defineComponent } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default defineComponent({
-  name: "PopupWrapper",
+  name: 'PopupWrapper',
   computed: {
-    ...mapGetters(["currentPopup"])
+    ...mapGetters(['currentPopup']),
   },
-  methods: mapActions(["clearFirstPopup"])
+  methods: mapActions(['clearFirstPopup']),
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
 
 #popup {
   padding: 0 20px;

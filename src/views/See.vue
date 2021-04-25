@@ -20,37 +20,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import PageHeader from "@/components/PageHeader.vue";
-import { mapActions, mapGetters, mapMutations } from "vuex";
-import { Day } from "@/types/firestore";
-import LogCard from "@/components/LogCard.vue";
+import { defineComponent } from 'vue';
+import PageHeader from '@/components/PageHeader.vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { Day } from '@/types/firestore';
+import LogCard from '@/components/LogCard.vue';
 
 export default defineComponent({
-  name: "See",
+  name: 'See',
   components: { LogCard, PageHeader },
   computed: {
-    ...mapGetters(["log/days"]),
-    ...mapGetters("auth", ["isContentManager"]),
+    ...mapGetters(['log/days']),
+    ...mapGetters('auth', ['isContentManager']),
     days() {
-      return (this["log/days"] as unknown) as Day[];
-    }
+      return (this['log/days'] as unknown) as Day[];
+    },
   },
   methods: {
-    ...mapActions("log", ["fetchDays"]),
-    ...mapActions(["fetchFoodCategoriesAndTypes"]),
-    ...mapMutations("log", ["purgeDays"])
+    ...mapActions('log', ['fetchDays']),
+    ...mapActions(['fetchFoodCategoriesAndTypes']),
+    ...mapMutations('log', ['purgeDays']),
   },
   created() {
     this.purgeDays();
     this.fetchDays();
     this.fetchFoodCategoriesAndTypes();
-  }
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@use "../scss/variables" as *;
+@use '../scss/variables' as *;
+
 .hollow {
   color: var(--accent);
   background: $bg;
