@@ -4,9 +4,10 @@
       v-if="isContentManager"
       :icon="['far', 'times-circle']"
       class="btn-delete"
+      @click="delCard"
     />
     <div class="date-container">
-      <h2 class="date">{{ day.date.replaceAll('-', '.').concat('.') }}</h2>
+      <h2 class="date">{{ dateDisplay }}</h2>
     </div>
     <section
       class="dropdown-toggle"
@@ -24,7 +25,7 @@
           <p>{{ day.sleep.end || '?' }}</p>
         </div>
         <span class="bracket" v-if="day.sleep.duration" />
-        <h4>{{ day.sleep.duration.replace(':', 'h').concat('m') || '' }}</h4>
+        <h4>{{ day.sleep.duration?.replace(':', 'h').concat('m') || '' }}</h4>
       </div>
     </section>
     <section class="food">
@@ -95,11 +96,26 @@ export default defineComponent({
       );
       return total + 'g';
     },
+    dateDisplay(): string {
+      return this.day.date.replaceAll('-', '.').concat('.');
+    },
   },
   methods: {
-    ...mapActions(['fetchSupplementTypes']),
+    ...mapActions(['fetchSupplementTypes', 'setModal']),
+    ...mapActions('log', ['deleteDay']),
     toggleDropdown(): void {
       if (this.day.meals.length > 0) this.isOpen = !this.isOpen;
+    },
+    delCard(): void {
+      this.setModal({
+        title: `Delete ${this.dateDisplay}?`,
+        description: 'This cannot be undone.',
+        okBtn: 'delete',
+        closeBtn: 'cancel',
+        callback: () => {
+          this.deleteDay(this.day.id);
+        },
+      });
     },
   },
   created() {

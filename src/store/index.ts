@@ -10,6 +10,7 @@ import food from "./modules/food";
 import keypad from "@/store/modules/keypad";
 import editor from "@/store/modules/editor";
 import log from "@/store/modules/log";
+import modal from './modules/modal';
 
 export interface RootState {
   db: nFirestore;
@@ -31,6 +32,7 @@ export default createStore({
   modules: {
     auth,
     popup,
+    modal,
     user,
     people,
     supplement,

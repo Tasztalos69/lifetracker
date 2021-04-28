@@ -57,4 +57,13 @@ export interface KeypadState {
 export interface LogState {
   days: Day[];
   lastVisible: Nullable<QueryDocumentSnapshot>;
+  isListEnd: boolean;
+}
+
+export interface ModalState {
+  title: string;
+  description?: string;
+  okBtn: string;
+  closeBtn: string;
+  callback: () => any;
 }

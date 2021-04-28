@@ -1,6 +1,7 @@
 <template>
   <router-view />
   <PopupWrapper />
+  <ModalWrapper />
 </template>
 
 <script lang="ts">
@@ -9,9 +10,10 @@ import { mapActions, mapGetters } from 'vuex';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import PopupWrapper from './components/PopupWrapper.vue';
+import ModalWrapper from '@/components/ModalWrapper.vue';
 
 export default defineComponent({
-  components: { PopupWrapper },
+  components: { PopupWrapper, ModalWrapper },
   computed: mapGetters(['db']),
   created: function() {
     this.$store.commit('setDB', firebase.firestore());
@@ -84,10 +86,17 @@ span.number {
   transition: all 0.3s ease-in-out;
 }
 
+.fade2ms-enter-active,
+.fade2ms-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
 .fade5ms-enter-from,
 .fade5ms-leave-to,
 .fade3ms-enter-from,
-.fade3ms-leave-to {
+.fade3ms-leave-to,
+.fade2ms-enter-from,
+.fade2ms-leave-to {
   opacity: 0;
 }
 </style>

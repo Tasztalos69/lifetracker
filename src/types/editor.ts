@@ -2,6 +2,7 @@ import { Food, Meal, Sleep } from "@/types/firestore";
 
 export interface DateSleepRow {
   date: string;
+  dateStamp: string;
   sleep: Sleep;
 }
 
