@@ -1,12 +1,12 @@
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 import {
   SupplementType,
   Nullable,
   Person,
   FoodCategory,
   FoodType,
-  Day
-} from "./firestore";
+  Day,
+} from './firestore';
 import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
 
 export interface AuthState {
@@ -16,9 +16,9 @@ export interface AuthState {
 }
 
 export enum PopupType {
-  INFO = "info-circle",
-  WARN = "exclamation-triangle",
-  ERROR = "exclamation-circle"
+  INFO = 'info-circle',
+  WARN = 'exclamation-triangle',
+  ERROR = 'exclamation-circle',
 }
 
 export interface Popup {
@@ -48,7 +48,7 @@ export interface KeypadState {
   ref: string[];
   value: string;
   maxLength: number;
-  delimiter: Nullable<":" | ".">;
+  delimiter: Nullable<':' | '.'>;
   delimiterCount: number;
   placeholder: string;
   error?: string;

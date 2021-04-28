@@ -1,4 +1,4 @@
-import { Food, Meal, Sleep } from "@/types/firestore";
+import { Food, Meal, Sleep } from '@/types/firestore';
 
 export interface DateSleepRow {
   date: string;
