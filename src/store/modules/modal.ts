@@ -1,6 +1,10 @@
 import { ModalState as S } from '@/types/state';
 import { ActionContext } from 'vuex';
 import { RootState } from '@/store';
+import {
+  removeReloadPrevention,
+  setReloadPrevention,
+} from '@/utils/preventReload';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 const defaultState = {
@@ -36,15 +40,16 @@ const actions = {
       throw ReferenceError('Invalid arguments for setModal!');
     }
     commit('setModal', modal);
+    setReloadPrevention();
   },
   async modalBtnHandler(
     { commit, state }: ActionContext<S, RootState>,
-    // { isOk = false }: handlerArgs,
     isOk = false,
   ): Promise<void> {
     if (isOk) {
       await state.callback();
     }
+    removeReloadPrevention();
     commit('setModal', { ...defaultState });
   },
 };

@@ -1,40 +1,39 @@
-import { KeypadState as S } from "@/types/state";
-import { ActionContext } from "vuex";
-import { RootState } from "@/store";
+import { KeypadState as S } from '@/types/state';
+import { ActionContext } from 'vuex';
+import { RootState } from '@/store';
+import {
+  removeReloadPrevention,
+  setReloadPrevention,
+} from '@/utils/preventReload';
 
 const state = (): S => ({
   ref: [],
-  value: "",
+  value: '',
   maxLength: 0,
   delimiter: null,
   delimiterCount: 0,
-  placeholder: ""
+  placeholder: '',
 });
 
 const getters = {
   all: (state: S): S => state,
   ref: (state: S): string[] => state.ref,
   value: (state: S): string => state.value,
-  maxLength: (state: S): number => state.maxLength
+  maxLength: (state: S): number => state.maxLength,
 };
 const actions = {
   setError({ commit }: ActionContext<S, RootState>, text: string): void {
-    commit("setError", text);
+    commit('setError', text);
     setTimeout(() => {
-      commit("setError", undefined);
+      commit('setError', undefined);
     }, 2000);
-  }
-};
-
-const beforeUnloadListener = (e: BeforeUnloadEvent) => {
-  e.preventDefault();
-  e.returnValue = "";
+  },
 };
 
 const mutations = {
   init(
     state: S,
-    { placeholder, delimiter, delimiterCount, ref, value, maxLength }: S
+    { placeholder, delimiter, delimiterCount, ref, value, maxLength }: S,
   ): void {
     if (
       !placeholder ||
@@ -42,21 +41,21 @@ const mutations = {
       !ref ||
       !maxLength
     ) {
-      console.log("Provided parameters:", {
+      console.log('Provided parameters:', {
         delimiter,
         delimiterCount,
         ref,
         value,
-        maxLength
+        maxLength,
       });
-      throw ReferenceError("Invalid parameters for keypad init!");
+      throw ReferenceError('Invalid parameters for keypad init!');
     }
     if (ref.toString() === state.ref.toString()) {
       state.ref = [];
-      state.value = "";
+      state.value = '';
       state.delimiter = null;
-      state.placeholder = "";
-      window.removeEventListener("beforeunload", beforeUnloadListener);
+      state.placeholder = '';
+      removeReloadPrevention();
       return;
     }
 
@@ -64,24 +63,24 @@ const mutations = {
     state.placeholder = placeholder;
     state.delimiter = delimiter;
     state.delimiterCount = delimiterCount;
-    state.value = value || "";
+    state.value = value || '';
     state.maxLength = maxLength;
 
-    window.addEventListener("beforeunload", beforeUnloadListener);
+    setReloadPrevention();
   },
   add(state: S, charToAppend: string): void {
     state.value = state.value.concat(charToAppend);
   },
   discard(state: S): void {
     state.ref = [];
-    state.value = "";
+    state.value = '';
     state.delimiter = null;
-    state.placeholder = "";
-    window.removeEventListener("beforeunload", beforeUnloadListener);
+    state.placeholder = '';
+    removeReloadPrevention();
   },
   setError(state: S, text?: string): void {
     state.error = text;
-  }
+  },
 };
 
 export default {
@@ -89,5 +88,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

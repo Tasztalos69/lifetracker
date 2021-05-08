@@ -1,14 +1,14 @@
-import firebase from "firebase";
+import firebase from 'firebase';
 import Firestore = firebase.firestore.Firestore;
-import { DateSleepRow, FoodPart, SupplementDrinkRow } from "@/types/editor";
+import { DateSleepRow, FoodPart, SupplementDrinkRow } from '@/types/editor';
 
 export type nFirestore = Firestore | null;
 
 export type Nullable<T> = T | null;
 
 export enum ColorSchemes {
-  DEFAULT = "#000000",
-  GREEN = "#00ff00"
+  DEFAULT = '#000000',
+  GREEN = '#00ff00',
 }
 
 export interface UserSettings {
