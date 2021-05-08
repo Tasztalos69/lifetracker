@@ -38,8 +38,11 @@
     </div>
     <div id="day-list">
       <transition-group name="fade2ms">
-        <p v-if="days.length === 0">No data for selected range 😔</p>
-        <LogCard v-for="day in days" :day="day" :key="day.id" />
+        <p v-if="compoundData.length === 0">No data for selected range 😔</p>
+        <div class="list-item" v-for="c in compoundData" :key="c.id">
+          <LogCard v-if="c.type === 'day'" :day="c" />
+          <LogMilestone v-else-if="c.type === 'milestone'" :mst="c" />
+        </div>
         <button
           @click="fetchDays()"
           :key="'btn'"
@@ -58,8 +61,9 @@
 import { defineComponent } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { Day } from '@/types/firestore';
 import LogCard from '@/components/LogCard.vue';
+import { CompoundLogData } from '@/types/state';
+import LogMilestone from '@/components/LogMilestone.vue';
 
 interface Data {
   range: {
@@ -71,7 +75,7 @@ interface Data {
 
 export default defineComponent({
   name: 'See',
-  components: { LogCard, PageHeader },
+  components: { LogMilestone, LogCard, PageHeader },
   data(): Data {
     return {
       range: {
@@ -91,11 +95,12 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapGetters(['log/days']),
+    ...mapGetters(['log/compound']),
     ...mapGetters('log', ['isListEnd']),
     ...mapGetters('auth', ['isContentManager']),
-    days(): Day[] {
-      return (this['log/days'] as unknown) as Day[];
+    compoundData(): CompoundLogData[] {
+      return this['log/compound'];
+      // return (this['log/compound'] as unknown) as Day[];
     },
   },
   methods: {

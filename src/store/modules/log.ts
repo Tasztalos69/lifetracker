@@ -1,23 +1,49 @@
-import { LogState as S } from '@/types/state';
-import { Day, Nullable } from '@/types/firestore';
+import {
+  CompoundLogData,
+  LogState as S,
+  TypedDay,
+  TypedMilestone,
+} from '@/types/state';
+import { Day, Milestone, Nullable } from '@/types/firestore';
 import { ActionContext } from 'vuex';
 import { RootState } from '@/store';
 import validateDB from '@/utils/validateDB';
 import firebase from 'firebase';
 import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
 import constructFBData from '@/utils/constructFBData';
+import numOrZero from '@/utils/numOrZero';
 
-const state = (): S => ({ days: [], lastVisible: null, isListEnd: false });
+const state = (): S => ({
+  days: [],
+  milestones: [],
+  lastVisible: null,
+  isListEnd: false,
+});
 
 const getters = {
   days: (s: S): Day[] => s.days,
+  milestones: (s: S): Milestone[] => s.milestones,
   lastVisible: (s: S): Nullable<QueryDocumentSnapshot> => s.lastVisible,
   isListEnd: (s: S): boolean => s.isListEnd,
+  compound: (s: S): CompoundLogData[] => {
+    const days: TypedDay[] = s.days as TypedDay[];
+    const milestones: TypedMilestone[] = s.milestones as TypedMilestone[];
+    days.forEach(d => (d.type = 'day'));
+    milestones.forEach(m => (m.type = 'milestone'));
+    return [...days, ...milestones].sort(
+      (a, b) => numOrZero(a.dateStamp) - numOrZero(b.dateStamp),
+    );
+  },
 };
+
+interface Range {
+  start: string;
+  end: string;
+}
 
 const actions = {
   async fetchDays(
-    { state, rootState, commit }: ActionContext<S, RootState>,
+    { state, rootState, commit, dispatch }: ActionContext<S, RootState>,
     shouldReset = false,
   ): Promise<void> {
     if (shouldReset) {
@@ -28,22 +54,30 @@ const actions = {
     const db = validateDB(rootState);
     const daysQuery = await db
       .collection('days')
-      .orderBy('dateStamp')
       .limit(30)
+      .orderBy('dateStamp')
       .startAfter(shouldReset ? 0 : state.lastVisible || 0);
     const days = await daysQuery.get();
-    console.log('days', days);
 
     if (!state.isListEnd && days.docs.length > 0) {
       commit('setLastVisible', days.docs[days.docs.length - 1]);
       days.forEach(d => commit('appendDay', constructFBData(d)));
+
+      const sortedDays = state.days.sort(
+        (a, b) => numOrZero(a.dateStamp) - numOrZero(b.dateStamp),
+      );
+      await dispatch('fetchMilestones', {
+        start: sortedDays[0].dateStamp,
+        end: sortedDays[sortedDays.length - 1].dateStamp,
+      });
     } else {
       commit('setListEnd', true);
     }
   },
+
   async fetchRangeDays(
-    { rootState, commit }: ActionContext<S, RootState>,
-    { start, end }: { start: string; end: string },
+    { rootState, commit, dispatch }: ActionContext<S, RootState>,
+    { start, end }: Range,
   ): Promise<void> {
     const db = validateDB(rootState);
     commit('purgeDays');
@@ -51,10 +85,11 @@ const actions = {
       .collection('days')
       .where('dateStamp', '>=', start)
       .where('dateStamp', '<=', end)
-      .orderBy('dateStamp')
       .get();
     days.forEach(d => commit('appendDay', constructFBData(d)));
+    await dispatch('fetchMilestones', { start, end });
   },
+
   async deleteDay(
     { commit, rootState }: ActionContext<string, RootState>,
     id: string,
@@ -71,6 +106,37 @@ const actions = {
       console.error(e);
     }
   },
+
+  async fetchMilestones(
+    { rootState, commit }: ActionContext<S, RootState>,
+    { start, end }: Range,
+  ): Promise<void> {
+    const db = validateDB(rootState);
+    commit('purgeMilestones');
+    const msts = await db
+      .collection('milestones')
+      .where('dateStamp', '>=', start)
+      .where('dateStamp', '<=', end)
+      .get();
+    msts.forEach(d => commit('appendMilestone', constructFBData(d)));
+  },
+
+  async deleteMilestone(
+    { commit, rootState }: ActionContext<string, RootState>,
+    id: string,
+  ): Promise<void> {
+    const db = validateDB(rootState);
+    try {
+      await db
+        .collection('milestones')
+        .doc(id)
+        .delete();
+
+      commit('filterMilestones', id);
+    } catch (e) {
+      console.error(e);
+    }
+  },
 };
 
 const mutations = {
@@ -83,6 +149,17 @@ const mutations = {
   purgeDays(s: S): void {
     s.days = [];
   },
+
+  appendMilestone(s: S, m: Milestone): void {
+    s.milestones.push(m);
+  },
+  purgeMilestones(s: S): void {
+    s.milestones = [];
+  },
+  filterMilestones(s: S, id: string): void {
+    s.milestones = s.milestones.filter(d => d.id !== id);
+  },
+
   setLastVisible(s: S, data: QueryDocumentSnapshot): void {
     s.lastVisible = data;
   },

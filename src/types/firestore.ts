@@ -68,3 +68,9 @@ export interface FoodCategory {
   name: string;
   icon: string[];
 }
+
+export interface Milestone {
+  id: string;
+  dateStamp: string;
+  title: string;
+}

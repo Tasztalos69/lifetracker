@@ -6,6 +6,7 @@ import {
   FoodCategory,
   FoodType,
   Day,
+  Milestone,
 } from './firestore';
 import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
 
@@ -56,6 +57,7 @@ export interface KeypadState {
 
 export interface LogState {
   days: Day[];
+  milestones: Milestone[];
   lastVisible: Nullable<QueryDocumentSnapshot>;
   isListEnd: boolean;
 }
@@ -67,3 +69,15 @@ export interface ModalState {
   closeBtn: string;
   callback: () => any;
 }
+
+type CompoundType = 'day' | 'milestone';
+
+export interface TypedDay extends Day {
+  type: CompoundType;
+}
+
+export interface TypedMilestone extends Milestone {
+  type: CompoundType;
+}
+
+export type CompoundLogData = TypedDay | TypedMilestone;
