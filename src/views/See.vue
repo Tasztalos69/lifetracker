@@ -6,14 +6,16 @@
         <h2>
           Date filters
         </h2>
-        <button
-          @click="clearRange"
-          v-if="range.start && range.end"
-          class="btn-clear"
-        >
-          <fa :icon="['far', 'times-circle']" />
-          Clear
-        </button>
+        <transition name="fade2ms">
+          <button
+            @click="clearRange"
+            v-if="range.start && range.end"
+            class="btn-clear"
+          >
+            <fa :icon="['far', 'times-circle']" />
+            Clear
+          </button>
+        </transition>
       </div>
       <span class="separator" />
       <button class="hollow filter" @click="setMonth(0)">This month</button>
@@ -31,10 +33,35 @@
       />
 
       <span class="separator" />
-      <h2>Milestones</h2>
-      <button v-if="isContentManager" class="hollow">
-        <fa :icon="['fas', 'plus']" />Add milestone
-      </button>
+      <h2>Add Milestone</h2>
+      <div class="milestone-editor" v-if="isContentManager">
+        <form v-if="newMst.showForm" @submit.prevent="addMst">
+          <label for="mst-date">Date</label>
+          <input
+            type="text"
+            id="mst-date"
+            v-model="newMst.date"
+            placeholder="2020.01.01."
+          />
+          <label for="mst-title">Title</label>
+          <input
+            type="text"
+            id="mst-title"
+            v-model="newMst.title"
+            placeholder="achieved supremacy"
+          />
+          <button type="submit">
+            <fa :icon="['fas', 'check']" />
+          </button>
+        </form>
+        <button
+          v-else
+          class="hollow add-milestone"
+          @click="newMst.showForm = true"
+        >
+          <fa :icon="['fas', 'plus']" />Add milestone
+        </button>
+      </div>
     </div>
     <div id="day-list">
       <transition-group name="fade2ms">
@@ -62,16 +89,34 @@ import { defineComponent } from 'vue';
 import PageHeader from '@/components/PageHeader.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import LogCard from '@/components/LogCard.vue';
-import { CompoundLogData } from '@/types/state';
+import { CompoundLogData, PopupType } from '@/types/state';
 import LogMilestone from '@/components/LogMilestone.vue';
+import { DateTime } from 'luxon';
+import isEmpty from 'lodash/isEmpty';
 
 interface Data {
   range: {
     start: number | undefined;
     end: number | undefined;
   };
+  newMst: {
+    showForm: boolean;
+    date: string;
+    title: string;
+  };
   [key: string]: any;
 }
+
+const inputDateToIsoString = (date: string): string => {
+  return date.replaceAll('.', '-').replace(new RegExp('-' + '+$'), '');
+};
+
+const validateDate = (date: string): boolean => {
+  const datePattern = /^(19|20)\d\d[.](0[1-9]|1[012])[.](0[1-9]|[12][0-9]|3[01])[.]$/;
+  if (!datePattern.test(date)) return false;
+  const dt = DateTime.fromISO(inputDateToIsoString(date));
+  return dt.isValid;
+};
 
 export default defineComponent({
   name: 'See',
@@ -81,6 +126,11 @@ export default defineComponent({
       range: {
         start: undefined,
         end: undefined,
+      },
+      newMst: {
+        showForm: false,
+        date: '',
+        title: '',
       },
       attrs: [
         {
@@ -100,12 +150,11 @@ export default defineComponent({
     ...mapGetters('auth', ['isContentManager']),
     compoundData(): CompoundLogData[] {
       return this['log/compound'];
-      // return (this['log/compound'] as unknown) as Day[];
     },
   },
   methods: {
-    ...mapActions('log', ['fetchDays', 'fetchRangeDays']),
-    ...mapActions(['fetchFoodCategoriesAndTypes']),
+    ...mapActions('log', ['fetchDays', 'fetchRangeDays', 'addMilestone']),
+    ...mapActions(['fetchFoodCategoriesAndTypes', 'addPopup']),
     ...mapMutations('log', ['purgeDays']),
     setMonth(monthPrefix: number): void {
       const date = new Date();
@@ -127,6 +176,27 @@ export default defineComponent({
         start: undefined,
         end: undefined,
       };
+    },
+    async addMst(): Promise<any> {
+      const { date, title } = this.newMst;
+      console.log(date, title);
+      if (isEmpty(date) || isEmpty(title))
+        return this.addPopup({
+          text: 'Fields should not be empty.',
+          type: PopupType.ERROR,
+        });
+      if (!validateDate(date))
+        return this.addPopup({
+          text: 'Invalid date!',
+          type: PopupType.ERROR,
+        });
+      await this.addMilestone({
+        title,
+        dateStamp: DateTime.fromISO(inputDateToIsoString(date)).toMillis(),
+      });
+      this.newMst.date = '';
+      this.newMst.title = '';
+      this.newMst.showForm = false;
     },
   },
   watch: {
@@ -205,6 +275,43 @@ export default defineComponent({
       margin: 10px 0;
       background: var(--accent);
       border-radius: 1000px;
+    }
+
+    .milestone-editor {
+      form {
+        label {
+          display: block;
+          font-weight: 700;
+          margin-top: 20px;
+          font-size: 1.1rem;
+        }
+
+        input {
+          margin-top: 5px;
+          display: block;
+          border: none;
+          border-bottom: 3px solid var(--accent);
+          font-size: 1.1rem;
+          background: none;
+
+          &:last-of-type {
+            display: inline;
+          }
+        }
+
+        button {
+          margin: 0 0 0 20px;
+          padding: 0;
+          background: none;
+          border: none;
+          color: var(--accent);
+          font-size: 1.4rem;
+        }
+      }
+
+      .add-milestone {
+        margin-top: 10px;
+      }
     }
   }
 

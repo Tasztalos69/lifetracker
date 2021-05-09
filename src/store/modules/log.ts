@@ -1,6 +1,7 @@
 import {
   CompoundLogData,
   LogState as S,
+  PopupType,
   TypedDay,
   TypedMilestone,
 } from '@/types/state';
@@ -39,6 +40,11 @@ const getters = {
 interface Range {
   start: string;
   end: string;
+}
+
+interface NewMst {
+  title: string;
+  dateStamp: number;
 }
 
 const actions = {
@@ -105,6 +111,24 @@ const actions = {
     } catch (e) {
       console.error(e);
     }
+  },
+
+  async addMilestone(
+    { state, rootState, dispatch, commit }: ActionContext<S, RootState>,
+    { title, dateStamp }: NewMst,
+  ): Promise<void> {
+    const db = validateDB(rootState);
+    console.log('dateStamp', dateStamp);
+    await db.collection('milestones').add({ title, dateStamp });
+    commit('purgeMilestones');
+
+    // TODO fetch for new milestones
+
+    await dispatch(
+      'addPopup',
+      { text: 'Success.', type: PopupType.INFO },
+      { root: true },
+    );
   },
 
   async fetchMilestones(
