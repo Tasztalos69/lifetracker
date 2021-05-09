@@ -1,5 +1,5 @@
-import { RootState } from "../store";
-import firebase from "firebase";
+import { RootState } from '@/store';
+import firebase from 'firebase';
 import Firestore = firebase.firestore.Firestore;
 
 export default (rootState: RootState): Firestore => {

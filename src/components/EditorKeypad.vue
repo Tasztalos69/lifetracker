@@ -7,7 +7,6 @@
             <fa :icon="['fas', 'exclamation-triangle']" />{{ keypad.error }}
           </h3>
         </transition>
-        <!-- prettier-ignore -->
         <input
           v-focus
           v-if="!isMobile"
@@ -15,7 +14,7 @@
           :maxlength="keypad.maxLength"
           :placeholder="keypad.placeholder"
           @keypress.enter="$store.dispatch('editor/save')"
-        >
+        />
         <div class="value-display" v-else>
           <h2 v-if="showValue">{{ keypad.value }}</h2>
           <p v-else>{{ keypad.placeholder }}</p>
