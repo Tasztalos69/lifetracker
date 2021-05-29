@@ -1,5 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import store from '@/store';
+
 import {
   faEye,
   faPlusSquare,
@@ -50,5 +52,7 @@ library.add(
   faAngleDoubleDown,
   faDrumstickBite, // OVERRIDE
 );
+
+console.log(store.getters);
 
 export default FontAwesomeIcon;

@@ -1,45 +1,50 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import store from "../store";
-import { Routes } from "../types/router";
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import store from '../store';
+import { Routes } from '../types/router';
 
-const { Dashboard, Login, People, Add, See } = Routes;
+const { Dashboard, Login, People, Add, See, Manage } = Routes;
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
+    path: '/',
     name: Dashboard,
-    component: () => import("@/views/Dashboard.vue")
+    component: () => import('@/views/Dashboard.vue'),
   },
   {
-    path: "/login",
+    path: '/login',
     name: Login,
-    component: () => import("@/views/Login.vue")
+    component: () => import('@/views/Login.vue'),
   },
   {
-    path: "/people",
+    path: '/people',
     name: People,
-    component: () => import("@/views/People.vue")
+    component: () => import('@/views/People.vue'),
   },
   {
-    path: "/add",
+    path: '/add',
     name: Add,
-    component: () => import("@/views/Add.vue")
+    component: () => import('@/views/Add.vue'),
   },
   {
-    path: "/see",
+    path: '/see',
     name: See,
-    component: () => import("@/views/See.vue")
-  }
+    component: () => import('@/views/See.vue'),
+  },
+  {
+    path: '/manage',
+    name: Manage,
+    component: () => import('@/views/Manage.vue'),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0);
-  const isLoggedIn = store.getters["auth/isLoggedIn"];
-  console.log("to", to.fullPath, "from", from.fullPath, "loggedIn", isLoggedIn);
+  const isLoggedIn = store.getters['auth/isLoggedIn'];
+  console.log('to', to.fullPath, 'from', from.fullPath, 'loggedIn', isLoggedIn);
   if (to.name === Login) {
     if (isLoggedIn) return next({ name: Dashboard });
     return next();

@@ -193,20 +193,22 @@ export default defineComponent({
 <style scoped lang="scss">
 @use '../scss/variables' as *;
 
-#s-food #existing-meals {
-  width: 80%;
-  margin-left: 10%;
+#s-food {
+  #existing-meals {
+    width: 80%;
+    margin-left: 10%;
 
-  .existing-meal {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-    margin: 10px 0;
+    .existing-meal {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      margin: 10px 0;
 
-    &:not(:last-of-type) {
-      border-bottom: 2px dashed rgba($disabled, 0.4);
+      &:not(:last-of-type) {
+        border-bottom: 2px dashed rgba($disabled, 0.4);
+      }
     }
   }
 
